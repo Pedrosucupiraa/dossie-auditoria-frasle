@@ -1,5 +1,13 @@
 # Dossiê Acadêmico de Auditoria — Frasle Mobility S.A.
 
+**Universidade de Brasília (UnB)**
+- **Disciplina:** Auditoria 1 — CCA0024
+- **Aluno:** Pedro Henrique De Oliveira Sucupira
+- **Matrícula:** 241003375
+- **Professor:** Lucas Oliveira Gomes Ferreira
+- **Empresa analisada:** Frasle Mobility S.A.
+- **Exercício analisado:** 2025
+
 ## 1. Apresentação
 
 Este repositório reúne a documentação do trabalho acadêmico desenvolvido para a disciplina Auditoria 1 — CCA0024 — Turma 02 — 2026.2, da Universidade de Brasília (UnB).
@@ -77,13 +85,3 @@ As datas de acesso e os detalhes das fontes consultadas estão registrados nos a
 - Markdown para documentação;
 - GitHub para versionamento e disponibilização do projeto.
 
-## 9. Identificação acadêmica
-
-- **Instituição:** Universidade de Brasília (UnB)
-- **Disciplina:** Auditoria 1 — CCA0024
-- **Turma:** 02
-- **Período letivo:** 2026.2
-- **Empresa analisada:** Frasle Mobility S.A.
-- **Exercício analisado:** 2025
-- **Aluno:** Pedro Henrique De Oliveira Sucupira
-- **Matrícula:** 241003375
