@@ -1,0 +1,22 @@
+PT32 - MATERIALIDADE DE AUDITORIA
+
+Norma de referência: NBC TA 320 - Materialidade no Planejamento e na Execução da Auditoria.
+
+1. Materialidade global
+Adota-se provisoriamente o ativo total de 2025, de R$ 7.222.660 mil, como base de referência, por se tratar de um trabalho acadêmico com foco relevante nas contas do ativo. O percentual de 1% é uma premissa ilustrativa de planejamento, e não um percentual obrigatório da NBC TA 320.
+Materialidade global estimada: R$ 72.226,60 mil.
+
+2. Materialidade para execução
+Adota-se, provisoriamente, 75% da materialidade global, resultando em R$ 54.169,95 mil. O percentual é uma premissa acadêmica e deverá ser revisto conforme a avaliação dos riscos e a possibilidade de distorções não detectadas ou não corrigidas.
+
+3. Análise específica dos intangíveis
+O saldo de intangíveis em 2025 é de R$ 1.874.550 mil, equivalente a aproximadamente 25,95% do ativo total. A relevância da conta e o julgamento envolvido em amortização, vida útil e recuperabilidade justificam atenção específica no planejamento.
+O cálculo de 2% do saldo dos intangíveis (R$ 37.491 mil) será tratado apenas como cenário ilustrativo de sensibilidade. Não será considerado materialidade específica formalmente estabelecida sem justificativa adicional baseada nas necessidades dos usuários das demonstrações.
+
+4. Julgamento profissional e limitações
+Conforme a NBC TA 320, a materialidade envolve julgamento profissional e deve considerar as necessidades dos usuários das demonstrações contábeis. Os percentuais adotados neste trabalho são estimativas acadêmicas preliminares, não regras fixas da norma nem parâmetros definidos em auditoria independente real.
+A materialidade deverá ser reavaliada se surgirem novas informações ou se a avaliação dos riscos indicar necessidade de revisão.
+
+Referência dos cálculos: 05_resultados/calculo_materialidade.csv
+Preparador: [inserir nome e matrícula]
+Data: 24/10/2026
