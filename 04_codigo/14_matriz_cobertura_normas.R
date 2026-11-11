@@ -79,7 +79,7 @@ resultado_conclusao = c(
   "Objetivos e limites documentados (PT18); não houve contratação, independência real nem opinião emitida",
   "Pré-condições e termos descritos de forma didática (PT19); sem contratação, carta assinada ou aprovação pela administração",
   "Requisitos de qualidade descritos (PT23); não é possível atestar qualidade do trabalho nem independência da equipe",
-  "Índice e matriz criados; Índice e matriz criados; PTs padronizados em 7 colunas; versões anteriores arquivadas ",
+  "Índice e matriz criados; PTs padronizados em 7 colunas; versões anteriores arquivadas ",
   "Riscos de fraude considerados (PT07); lançamentos e override não testados; não é possível concluir sobre fraude",
   "Análise documental limitada (PT11); não permite concluir sobre o cumprimento integral de leis e regulamentos",
   "Assuntos a comunicar listados (PT12); nenhuma comunicação real com a governança",

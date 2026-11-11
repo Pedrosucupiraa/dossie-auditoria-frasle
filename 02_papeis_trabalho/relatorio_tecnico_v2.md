@@ -76,8 +76,7 @@ A base tem 500.000 registros e 250 erros inseridos deliberadamente. Resultado do
 | Indicador de impairment ausente | 86 | 86 | 0 | 100,0% |
 | Amortizacao inconsistente | 85 | 57 | 28 | 67,1% |
 
-**52 erros inseridos não foram detectados.** O arquivo `05_resultados/erros_vida_util_nao_detectados.csv` deveria listar os de vida útil e precisa ser revisto. O teste de indicador de impairment sinalizou mais registros do que os erros inseridos:
-
+**52 erros inseridos não foram detectados** (24 de vida útil e 28 de amortização), todos em registros de Goodwill: o teste de vida útil exclui Goodwill por desenho e, nos de amortização, o valor registrado e o esperado são zero. Os registros estão em `05_resultados/erros_vida_util_nao_detectados.csv` e `erros_amortizacao_nao_detectados.csv`. O teste de indicador de impairment sinalizou mais registros do que os erros inseridos:
 | Teste | Registros sinalizados |
 | --- | --- |
 | Vida util inferior a tres anos | 55 |
@@ -151,7 +150,7 @@ O relatório da KPMG Auditores Independentes S.S., de 11 de março de 2026, que 
 
 ## 12. Exceções não resolvidas e limites do alcance
 
-- 52 dos 250 erros simulados não foram detectados pelos testes e seguem sem investigação.
+- 52 dos 250 erros simulados não foram detectados pelos testes. A origem foi localizada (Goodwill, fora do alcance do teste), mas os testes não foram redesenhados para cobri-los.
 - As sinalizações de indicador de impairment acima dos erros inseridos não foram investigadas.
 - O efeito monetário dos erros simulados foi medido só para amortização inconsistente; vida útil e indicador de impairment não têm efeito monetário direto na base.
 - A estimativa de recuperabilidade real, os controles internos, as confirmações externas, as representações da administração e os componentes do grupo não foram examinados: não houve acesso.
