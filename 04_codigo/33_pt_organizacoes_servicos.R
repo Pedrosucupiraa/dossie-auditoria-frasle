@@ -1,4 +1,3 @@
-
 # PT20 - Organizacoes prestadoras de servicos
 # Norma: NBC TA 402
 # Analise conceitual e limitacoes de acesso

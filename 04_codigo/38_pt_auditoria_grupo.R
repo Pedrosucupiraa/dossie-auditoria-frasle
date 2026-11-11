@@ -1,5 +1,3 @@
-
-
 # PT24 - NBC TA 600: Auditoria de Grupo
 
 pt600 <- data.frame(

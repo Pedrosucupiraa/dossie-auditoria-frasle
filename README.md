@@ -1,125 +1,138 @@
-# Dossiê Acadêmico de Auditoria — Frasle Mobility S.A.
+# Dossiê Acadêmico de Auditoria — Frasle Mobility S.A. (exercício de 2025)
 
-**Universidade de Brasília (UnB)**
-* **Disciplina:** Auditoria 1 — CCA0024 (Turma 02 — 2026.2)
-* **Aluno:** Pedro Henrique De Oliveira Sucupira
-* **Matrícula:** 241003375
-* **Professor:** Lucas Oliveira Gomes Ferreira
-* **Empresa Analisada:** Frasle Mobility S.A.
-* **Exercício Analisado:** 2025
+- **Universidade de Brasília (UnB)** — Auditoria 1 (CCA0024), Turma 02, 2026.2
+- **Docente:** Prof. Dr. Lucas Oliveira Gomes Ferreira
+- **Estudante:** Pedro Henrique De Oliveira Sucupira — matrícula 241003375
+- **Companhia:** Frasle Mobility S.A. (Companhia Aberta, registro CVM 0155265) — demonstrações consolidadas de 2025, com comparativos de 2024
 
----
+------------------------------------------------------------------------
 
-## 1. Apresentação
+## 1. O que este trabalho é (e o que não é)
 
-Este repositório reúne a documentação técnica e os scripts automatizados desenvolvidos para a disciplina **Auditoria 1 — CCA0024** da Universidade de Brasília (UnB).
+Trabalho acadêmico. Não houve contratação, acesso à companhia nem contato com a administração, e **nenhuma opinião de auditoria é emitida**. Todo resultado do dossiê é de um destes três tipos, e a coluna `Natureza` dos papéis de trabalho e a coluna `status_cobertura` da matriz informam qual:
 
-O estudo tem como objeto as demonstrações financeiras consolidadas da **Frasle Mobility S.A.** referentes ao exercício de 2025 (com comparativos de 2024), apresentando procedimentos analíticos substantivos, amostragem estatística formal, análise de sensibilidade de estimativas e a matriz de cobertura integral das 27 atividades normativas da auditoria (NBC TA).
+| Tipo | Significado |
+|------------------------------------|------------------------------------|
+| **Evidência pública** | Dado extraído das demonstrações financeiras publicadas na CVM (`01_fontes/`). |
+| **Planejado — não executado** | Procedimento descrito, mas que dependeria de acesso que não existiu (registros internos, confirmações, administração). |
+| **Simulação** | Teste sobre a base sintética de 500.000 registros ou sobre premissas hipotéticas. Vale só para a simulação; não é evidência sobre a companhia. |
 
----
+Uma referência normativa, o volume de registros ou a reconciliação aritmética **não substituem** o julgamento sobre a afirmação examinada.
 
-## 2. Objetivos
+## 2. Estrutura do repositório
 
-* **Estruturação da Materialidade (NBC TA 320 / 450):** Definir e fundamentar a tripla materialidade com base no Ativo Total como *benchmark* industrial.
-* **Amostragem Estatística (NBC TA 530):** Aplicar Amostragem por Unidade Monetária (MUS) sobre a população de ativos intangíveis.
-* **Auditoria de Estimativas (NBC TA 540):** Executar análise de sensibilidade determinística (taxa de desconto WACC) sobre o valor recuperável dos ativos intangíveis.
-* **Padronização dos Papéis de Trabalho (NBC TA 200 a 600):** Consolidar a documentação dos 27 Papéis de Trabalho (PTs) vinculados a evidências públicas e sintéticas.
-* **Reprodutibilidade em R:** Disponibilizar scripts R organizados e sequenciais para geração automática de relatórios, matrizes e cálculos contábeis.
+```         
+01_fontes/               DFP 2025 (PDF da CVM) e registro de fontes
+02_papeis_trabalho/      Papéis de trabalho (PT) em CSV, todos no esquema de 7 colunas
+  versoes_anteriores/    Versões substituídas na consolidação (preservadas)
+03_base_sintetica/       Base sintética de 500.000 registros do intangível, log de erros e dicionário
+04_codigo/               Scripts em R (numerados)
+05_resultados/           Resultados gerados pelos scripts, incluindo a planilha editável
+06_matrizes/             Matriz de cobertura das 27 atividades e índices dos PTs
+relatorio_tecnico_v2.*   Relatório (gerado pelo script 39; fica em 02_papeis_trabalho/)
+```
 
----
+**Esquema dos PTs:** `Codigo, Norma, Procedimento, Natureza, Evidencia, Resultado, Limitacao`. Os campos que não cabem nessas colunas (tema, risco, referências cruzadas, status, área, título, preparador, revisor, datas) estão preservados em:
 
-## 3. Metodologia
+- `06_matrizes/detalhes_procedimentos_pts.csv` — por procedimento (colunas `Codigo`, `Campo`, `Valor`);
+- `06_matrizes/indice_papeis_trabalho.csv` — por papel de trabalho.
 
-A análise baseou-se nas Demonstrações Financeiras Padronizadas (DFP) de 2025 da Fras-le Mobility S.A. publicadas na CVM.
+Nenhum PT tem revisor independente: o campo de revisão está sempre "pendente".
 
-Os procedimentos integraram:
-1. **Definição de Parâmetros Globais:** Fixação da materialidade global (1% do Ativo Total), de execução (75%) e limite de distorções nulas (5%).
-2. **Validação de Base Sintética:** Exame automatizado de 500.000 registros de ativos intangíveis (totalizando R$ 1.874.550 mil) com reconciliação perfeita às DFPs.
-3. **Execução Numérica de Testes Estatísticos:** Aplicação da amostragem MUS com 95% de confiança ($n = 104$) e estressamento da taxa WACC ($9,5\%$ a $16,5\%$).
-4. **Rastreabilidade Documental:** Mapeamento de 100% das 27 atividades da NBC TA em arquivos CSV individuais e matriz unificada de cobertura.
+## 3. Cobertura das 27 atividades
 
----
+A matriz `06_matrizes/matriz_cobertura_normas.csv` lista as 27 atividades (Estrutura Conceitual e NBC TA 200 a 600) com o procedimento, a evidência vinculada, o resultado, o status e a limitação de cada uma. **Todas têm status parcial ou planejado**; nenhuma é tratada como auditoria executada. As normas sem PT próprio no início do trabalho (230, 300, 315, 330, 450, 500 e 530) têm agora `PT_230.csv`, `PT_300.csv`, `PT_315.csv`, `PT_330.csv`, `PT_450.csv`, `PT_500.csv` e `PT_530.csv`. A NBC TA 540 é coberta pelo `PT02_nota16_impairment.csv` e pelo `PT02_procedimentos_complementares.csv`, e a NBC TA 320 pelo `PT32_materialidade.csv`.
 
-## 4. Estrutura do Projeto
+## 4. Como reexecutar (ordem)
 
-dossie-auditoria-frasle/
+Pré-requisitos: R com os pacotes base; `data.table` (opcional, acelera a leitura da base) e `rmarkdown` (opcional, para o PDF). Execute a partir da raiz do projeto, no console do R, com `source("04_codigo/<arquivo>.R")`.
 
-├── 01_fontes/               # DFPs públicas, notas explicativas e registro de fontes
+A base sintética já está versionada em `03_base_sintetica/` (gerada e validada pelos scripts 06 a 12 e investigada no 19). Não é necessário regerá-la.
 
-├── 02_papeis_trabalho/      # 27 Papéis de Trabalho em CSV/TXT (PT-EC a PT-600)
+| Ordem | Script | O que produz |
+|------------------------|------------------------|------------------------|
+| 1 | `20_pt_fraude.R`, `21_pt_continuidade.R`, `22` a `34`, `36`, `37`, `38` (sem `21_atualizar_matriz.R`) | PT07 a PT24 (um script por PT) |
+| 2 | `43_pts_novos_expandidos.R` | `PT_230`, `PT_300`, `PT_315`, `PT_330`, `PT_450`, `PT_500` (e um `PT_530` provisório) |
+| 3 | `18_atualizar_pt02_impairment.R` | Sensibilidade do DCF didático, amostra MUS, `PT02_nota16_impairment.csv` e `PT_530.csv` definitivo |
+| 4 | `41_calculo_materialidade.R` | Materialidade, comparação de referenciais e `PT32_materialidade.csv` |
+| 5 | `14_matriz_cobertura_normas.R` | Matriz de cobertura das 27 atividades |
+| 6 | `44_padronizar_pts.R` | Converte os PTs de 17, 14 e 8 colunas para o esquema de 7 colunas |
+| 7 | `45_consolidar_pts.R` | Consolida PT02 complementar e PT03 a PT06; arquiva versões anteriores |
+| 8 | `39_gerar_relatorio_tecnico.R` | Relatório técnico, lendo os CSVs de resultados |
 
-├── 03_base_sintetica/       # Base individualizada de 500k registros do intangível
+Observações: o script 18 deve rodar **depois** do 43 (ele regrava o `PT_530.csv`). Os scripts 13, 15, 16 e 17 geraram os formatos anteriores de PT02 a PT06 e são históricos; não devem ser reexecutados depois do 45. Os scripts `21_atualizar_matriz.R`, `35_revisar_matriz_final.R` e `42_revisar_cobertura_normas.R` atualizavam a matriz num formato antigo e estão em `04_codigo/versoes_anteriores/`: a matriz atual vem apenas do script 14, que deve rodar depois dos scripts 20 a 38. O script 19 lista os erros inseridos que cada teste não detectou (`erros_vida_util_nao_detectados.csv` e `erros_amortizacao_nao_detectados.csv`, ambos de Goodwill, excluído do teste de vida útil). Se o console acusar objetos de outro script, rode `rm(list = ls())` antes de cada `source()`. O `01_estrutura.R` (exploração inicial, formatos antigos de PT02 a PT05) também é histórico e fica em `04_codigo/versoes_anteriores/`.
 
-├── 04_codigo/               # Scripts R automatizados para cálculos e matrizes
+## 5. Principais resultados (todos lidos de `05_resultados/`)
 
-├── 05_resultados/           # Resultados de materialidade, sensibilidade WACC e amostragem MUS
+### Materialidade — `PT32_materialidade.csv`, `calculo_materialidade.csv`, `comparacao_referenciais_materialidade.csv`
 
-└── 06_matrizes/             # Matriz consolidada de cobertura das 27 normas NBC TA
+Os percentuais são premissas acadêmicas; a NBC TA 320 não fixa percentuais. Referenciais das demonstrações consolidadas de 2025 (R\$ mil):
 
-## 5. Ordem de execução para reprodutibilidade (RScript)
-Para reexecutar todo o dossiê e gerar automaticamente os resultados, tabelas e relatórios, execute a seguinte sequência no console do RStudio:
-* ### 1. Recalcula os parâmetros de materialidade (PT 320)
-source("04_codigo/41_calculo_materialidade.R")
+| Referencial               | Valor 2025 |  \% | Materialidade global | Seleções MUS |
+|---------------------------|-----------:|----:|---------------------:|-------------:|
+| **Ativo total (adotado)** |  7.222.660 |  1% |        **72.226,60** |          104 |
+| Receita de venda          |  5.490.878 |  1% |            54.908,78 |          137 |
+| Patrimônio líquido        |  2.481.481 |  1% |            24.814,81 |          303 |
+| Lucro antes dos tributos  |    320.897 |  5% |            16.044,85 |          468 |
 
-* ### 2. Executa a amostragem MUS (PT 530) e a sensibilidade do WACC (PT 540)
-source("04_codigo/18_atualizar_pt02_impairment.R")
+Derivados do ativo total: execução (75%) R\$ 54.169,95 mil; limite de distorções irrelevantes (5%) R\$ 3.611,33 mil; materialidade específica do intangível (1% do saldo) R\$ 18.745,50 mil.
 
-* ### 3. Consolida a matriz de cobertura e gera os 27 PTs individuais em CSV
-source("04_codigo/14_matriz_cobertura_normas.R")
+**Justificativa e limite da escolha:** o ativo total foi mantido porque o objeto do trabalho é uma conta patrimonial (intangível: 25,95% do ativo) e o lucro antes dos tributos caiu 40,9% no ano, com resultado financeiro de +R\$ 24.129 mil para −R\$ 403.209 mil. O ativo total também cresceu (+48,3%), de modo que a escolha **não** se apoia em estabilidade. É o referencial **mais permissivo** da comparação (a materialidade adotada equivale a 4,5 vezes a obtida com o lucro antes dos tributos).
 
-* ### 4. Recompila o relatório técnico final e atualiza a documentação
-source("04_codigo/39_gerar_relatorio_tecnico.R")
+### Reconciliação do intangível — `PT05_conclusao_reconciliacao.csv`, `reconciliacao_intangivel_revisada.csv`
 
-## 6. Principais resultados e parâmetros da auditoria
-### Triângulo da Materialidade (NBC TA 320 / NBC TA 450)
- **Base de Referência (Benchmark):** Ativo Total 2025 — R$ 7.222.660,00 mil (escolhido por refletir a estrutura de capital intensivo da companhia e a estabilidade patrimonial).
+Evidência pública: saldo inicial R\$ 586.859 mil + movimentações R\$ 1.287.691 mil = R\$ 1.874.550 mil, igual ao divulgado (diferença zero). A igualdade aritmética não comprova existência, direitos, mensuração nem recuperabilidade.
 
-* **Materialidade Global (M):** R$ 72.226,60 mil (1,0% do Ativo Total).
+### Base sintética e detecção — `PT06`, `PT_450`, `comparacao_erros_teste.csv`
 
-* **Materialidade de Execução (ME):** R$ 54.169,95 mil (75,0% da Materialidade Global).
+Simulação. A base tem 500.000 registros (soma R\$ 1.874.550 mil, construída para igualar o saldo público) e 250 erros inseridos.
 
-* **Limite para Distorções Irrelevantes (LDI):** R$ 3.611,33 mil (5,0% da Materialidade Global).
+| Tipo de erro                    | Inseridos | Detectados |  Taxa |
+|---------------------------------|----------:|-----------:|------:|
+| Vida útil inadequada            |        79 |         55 | 69,6% |
+| Indicador de impairment ausente |        86 |         86 |  100% |
+| Amortização inconsistente       |        85 |         57 | 67,1% |
 
-* **Materialidade Específica do Intangível:** R$ 18.745,50 mil (1,0% do saldo do Intangível).
- 
-### Amostragem por Unidade Monetária (MUS — NBC TA 530)
-* **Tamanho Amostral (n):** 104 itens monetários (Nível de confiança de 95%, Fator de Poisson = 3,0, Intervalo J = R$ 18.056,65 mil).
+52 erros não foram detectados (24 de vida útil e 28 de amortização), todos em registros de Goodwill: o teste de vida útil exclui Goodwill por desenho e, nos 28 de amortização, o valor registrado e o esperado são ambos zero (`erros_vida_util_nao_detectados.csv` e `erros_amortizacao_nao_detectados.csv`, script 19). O teste de indicador de impairment sinalizou 100.113 registros: 86 são os erros inseridos e 100.027 têm indicador "Nao avaliado", estado válido da simulação que o teste também sinaliza.
 
-* **Resultado:** Projeção linear de distorção igual a R$ 0,00, confirmando a razoabilidade do saldo populacional de R$ 1.874.550 mil.
+### Amostragem por unidade monetária — `PT_530.csv`, `amostragem_mus_projecao.csv`, `mus_amostra_selecionada.csv`
 
-### Análise de Sensibilidade de Imparidade (NBC TA 540)
-* **Valor Recuperável Base (WACC 11,5% / g 3,0%):** R$ 2.941.176,47 mil (excede o valor contábil em 56,9%).
+Simulação. Confiança de 95%, materialidade de execução R\$ 54.169,95 mil, intervalo R\$ 18.056,65 mil, **104 seleções** sorteadas com `set.seed(241003375)`. A lista dos itens está em `mus_amostra_selecionada.csv`. Resultado: 0 erros inseridos na amostra; limite superior de distorção (Stringer, 95%) R\$ 54.092,89 mil, abaixo da materialidade de execução. Nenhum registro da base atinge o intervalo, portanto não há camada testada a 100%.
 
-* **Ponto de Ruptura (Break-even):** A necessidade de impairment surge apenas em cenários com WACC a partir de 16,5% (+5,0% acima do cenário base).
+**Limite desta evidência:** os 250 erros inseridos somam apenas R\$ 1.056,35 mil de valor contábil; uma amostra dessa dimensão tem baixa chance de encontrá-los. A ausência de erros na amostra não prova a ausência de erros na base.
 
-### 7. Cobertura normativa dos 27 papéis de trabalho
-Os 27 Papéis de Trabalho encontram-se integralmente executados, indexados e vinculados aos respectivos arquivos de suporte em 02_papeis_trabalho/ e 06_matrizes/matriz_cobertura_normas.csv:
+### Sensibilidade de um DCF didático — `PT02_nota16_impairment.csv`, `analise_sensibilidade_*.csv`, `sensibilidade_mus_editavel.xlsx`
 
-* **Estrutura Conceitual & Geral:** PT-EC, PT-200, PT-210, PT-220, PT-230.
+Simulação com **premissas hipotéticas**: fluxo de caixa de R\$ 250.000 mil por ano, WACC base de 11,5% e crescimento de 3,0%. **Não é o modelo da administração da Frasle nem dado público**; demonstra o método e **não conclui sobre a razoabilidade da estimativa real**, que não foi testada. No modelo ilustrativo, o valor recuperável do cenário base é R\$ 2.941.176 mil contra um saldo de R\$ 1.874.550 mil; a perda simulada só aparece com WACC de 16,34% (+4,84 p.p.) ou com queda de 36,3% no fluxo de caixa. A planilha `05_resultados/sensibilidade_mus_editavel.xlsx` permite alterar as premissas (abas DCF didático, MUS e Materialidade).
 
-* **Riscos, Fraude e Governança:** PT-240, PT-250, PT-260, PT-265.
+## 6. Rastreabilidade (resultado → arquivo → script)
 
-* **Planejamento e Materialidade:** PT-300, PT-315, PT-320, PT-330.
+| Resultado | Arquivo | Script | Natureza |
+|------------------|------------------|------------------|------------------|
+| Materialidade e comparação de referenciais | `PT32_materialidade.csv`, `calculo_materialidade.csv`, `comparacao_referenciais_materialidade.csv` | 41 | Evidência pública + premissas |
+| Variações analíticas 2024–2025 | `analise_procedimentos_analiticos.csv` (PT17) | 30 | Evidência pública |
+| Reconciliação do intangível | `reconciliacao_intangivel_revisada.csv`; `PT05_conclusao_reconciliacao.csv` | 15 (cálculo; em `versoes_anteriores/`, já executado) e 45 (PT05) | Evidência pública |
+| Erros inseridos e detecção na base | `resumo_erros_inseridos.csv` (10); `comparacao_erros_teste.csv`, `resumo_deteccao_independente.csv` (11) | 10 e 11 (validação da base: 09) | Simulação |
+| Amostra MUS | `mus_amostra_selecionada.csv`, `amostragem_mus_projecao.csv` | 18 | Simulação |
+| Sensibilidade do DCF didático | `analise_sensibilidade_impairment.csv`, `..._ponto_ruptura.csv`, `..._grade.csv` | 18 | Simulação (hipotética) |
+| Matriz das 27 atividades | `06_matrizes/matriz_cobertura_normas.csv` | 14 | Status por atividade |
+| Relatório técnico | `02_papeis_trabalho/relatorio_tecnico_v2.md` | 39 | Lê os CSVs acima |
 
-* **Organizações de Serviços & Distorções:** PT-402, PT-450.
+## 7. Exceções não resolvidas e limitações
 
-* **Evidências e Procedimentos Substantivos:** PT-500, PT-501, PT-505, PT-510, PT-520, PT-530, PT-540, PT-550.
+- 52 dos 250 erros simulados não foram detectados pelos testes (`PT_450.csv`). A origem foi localizada (todos em Goodwill, fora do alcance do teste de vida útil, e com amortização zero nos de amortização), mas os testes não foram redesenhados para cobri-los e o efeito deles não foi mensurado.
+- As sinalizações de indicador de impairment acima dos erros inseridos não foram investigadas individualmente.
+- O efeito monetário dos erros simulados foi medido só para amortização inconsistente (R\$ 158,40 mil); vida útil e indicador de impairment não têm efeito monetário direto mensurável na base.
+- A estimativa de recuperabilidade real, os controles internos, as confirmações externas, as representações da administração, a auditoria de grupo e os componentes **não foram examinados**: não houve acesso.
+- Os percentuais de materialidade são premissas; o resultado da amostragem vale só para a base sintética.
+- Nenhum papel de trabalho foi revisado por terceiro.
 
-* **Conclusão e Relatório de Grupo:** PT-560, PT-570, PT-580, PT-600.
+## 8. Conclusão
 
-### 8. Limitações
-Este trabalho possui caráter estritamente acadêmico para a disciplina Auditoria 1 (UnB) e não substitui um relatório de auditoria independente emitido nos termos das normas profissionais do CFC/CBRACON. Os testes efetuados sobre a base sintética aplicam-se exclusivamente às simulações desenvolvidas para fins didáticos.
+Com base em informações públicas e em uma base sintética, o trabalho: (i) fixou e justificou a materialidade com comparação de quatro referenciais; (ii) verificou que o saldo do intangível reconcilia aritmeticamente com a nota publicada; (iii) demonstrou testes de detecção e uma amostra MUS reproduzível sobre dados simulados; e (iv) demonstrou o método de sensibilidade com premissas hipotéticas. **Não é possível concluir** sobre a existência, a mensuração ou a recuperabilidade do intangível da companhia, nem sobre as demais contas. Os resultados sobre a base sintética não se aplicam à Frasle Mobility S.A.
 
-### 9. Fontes de consulta
-* **Comissão de Valores Mobiliários (CVM):** DFP Fras-le Mobility S.A. 2025
+## 9. Fontes
 
-* **Portal de RI Fras-le:** Demonstrações Financeiras 2025
-
-* **Conselho Federal de Contabilidade (CFC):** Normas Brasileiras de Contabilidade Técnica de Auditoria (NBC TA 200 a 600).
-
-### 10. Tecnologias utilizadas
-* **Linguagem R & RStudio:** Automação estatística e geração de dados.
-
-* **Arquivos CSV / TXT:** Estruturação de papéis de trabalho e matrizes.
-
-* **Markdown & Git / GitHub:** Documentação técnica e controle de versão. 
+- CVM — Demonstrações Financeiras Padronizadas (DFP 2025), Frasle Mobility S.A., documento 155265 (`01_fontes/`; consultado em 23/10/2026).
+- Portal de Relações com Investidores: ri.fraslemobility.com.
+- CFC — Normas Brasileiras de Contabilidade Técnicas de Auditoria (NBC TA 200 a 600).

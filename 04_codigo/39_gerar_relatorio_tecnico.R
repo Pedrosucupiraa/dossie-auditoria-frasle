@@ -1,200 +1,219 @@
-# Gerar relatorio tecnico completo do dossie de auditoria
-# Empresa: Frasle Mobility S.A. | Exercicio: 2025
-# Pasta do script: 04_codigo/
-# Arquivos gerados: 02_papeis_trabalho/relatorio_tecnico_v2.md e 02_papeis_trabalho/relatorio_tecnico_v2.pdf
+# 04_codigo/39_gerar_relatorio_tecnico.R
+# Gera o relatório técnico a partir dos CSVs de resultados.
+# Os números das tabelas e das conclusões vêm de 05_resultados/ e 06_matrizes/.
+# Execute DEPOIS dos scripts 43, 18, 41 e 14.
+# Saídas: 02_papeis_trabalho/relatorio_tecnico_v2.md (e .pdf, se rmarkdown estiver instalado)
 
 dir.create("02_papeis_trabalho", showWarnings = FALSE, recursive = TRUE)
 
-texto_md <- r"(# RELATÓRIO TÉCNICO DE AUDITORIA & DOSSIÊ DE EVIDÊNCIAS
-**Exercício Social de 2025 | Frasle Mobility S.A.**
+# ----------------------------------------------------------------- utilitários
+fmt <- function(x, d = 2) formatC(x, format = "f", digits = d, big.mark = ".", decimal.mark = ",")
+le  <- function(arq) read.csv(arq, stringsAsFactors = FALSE, fileEncoding = "UTF-8", check.names = FALSE)
+md_tabela <- function(df) {
+  df[] <- lapply(df, function(x) gsub("\\|", "/", as.character(x)))
+  c(paste0("| ", paste(names(df), collapse = " | "), " |"),
+    paste0("|", paste(rep(" --- ", ncol(df)), collapse = "|"), "|"),
+    apply(df, 1, function(l) paste0("| ", paste(l, collapse = " | "), " |")))
+}
 
----
+# ------------------------------------------------------------------- dados
+mat    <- le("05_resultados/calculo_materialidade.csv")
+refs   <- le("05_resultados/comparacao_referenciais_materialidade.csv")
+anal   <- le("05_resultados/analise_procedimentos_analiticos.csv")
+reco   <- le("05_resultados/reconciliacao_intangivel_revisada.csv")
+mus    <- le("05_resultados/amostragem_mus_projecao.csv")
+sens   <- le("05_resultados/analise_sensibilidade_impairment.csv")
+rup    <- le("05_resultados/analise_sensibilidade_ponto_ruptura.csv")
+det    <- le("05_resultados/comparacao_erros_teste.csv")
+sinal  <- le("05_resultados/resumo_deteccao_independente.csv")
+matriz <- le("06_matrizes/matriz_cobertura_normas.csv")
 
-### 1. Identificação do Trabalho
+m <- function(p) mat$valor_calculado_mil[mat$parametro == p]
+mus_v <- function(p) mus$valor[mus$parametro_amostral == p]
+mg <- m("Materialidade global"); me <- m("Materialidade de execução")
+ldi <- m("Limite de distorções irrelevantes"); mesp <- m("Materialidade específica do intangível")
+saldo <- reco$saldo_divulgado_R_mil
 
-- **Entidade Auditada:** Frasle Mobility S.A.
-- **CNPJ / Registro CVM:** Companhia Aberta — CVM nº 0155265
-- **Exercício Analisado:** 01/01/2025 a 31/12/2025 (com saldos comparativos de 2024)
-- **Instituição de Ensino:** Universidade de Brasília (UnB) — Faculdade de Economia, Administração, Contabilidade e Gestão de Políticas Públicas (FACE)
-- **Departamento:** Departamento de Ciências Contábeis e Atuariais (CCA)
-- **Disciplina:** Auditoria 1 — CCA0024 (Turma 02 — 2026.2)
-- **Docente Responsável:** Prof. Dr. Lucas Oliveira Gomes Ferreira
-- **Estudante / Auditor Responsável:** Pedro Henrique De Oliveira Sucupira (Matrícula: 241003375)
-- **Data de Emissão do Relatório:** 23 de Outubro de 2026
+# ------------------------------------------------------------------- tabelas
+t_ref <- data.frame(
+  Referencial = refs$referencial,
+  `Valor 2025` = fmt(refs$valor_2025_mil, 0),
+  `Variação vs 2024` = paste0(fmt(refs$variacao_pct, 1), "%"),
+  Percentual = paste0(fmt(refs$percentual * 100, 0), "%"),
+  `Materialidade global` = fmt(refs$materialidade_global_mil),
+  `Seleções MUS` = refs$selecoes_mus,
+  Adotado = refs$selecionado, check.names = FALSE)
 
----
+t_mat <- data.frame(Parâmetro = mat$parametro, Base = mat$base_referencia,
+                    Percentual = mat$percentual_aplicado,
+                    `Valor (R$ mil)` = fmt(mat$valor_calculado_mil), check.names = FALSE)
 
-### 2. Sumário Executivo & Escopo dos Exames
+t_anal <- data.frame(Conta = anal$Conta, `2024` = fmt(anal$Valor_2024, 0), `2025` = fmt(anal$Valor_2025, 0),
+                     `Variação` = fmt(anal$Variacao_absoluta, 0),
+                     `Variação %` = paste0(fmt(anal$Variacao_percentual, 1), "%"),
+                     Observação = anal$Observacao, check.names = FALSE)
 
-O presente Relatório Técnico de Auditoria documenta os procedimentos analíticos substantivos, testes de amostragem estatística, exames de sensibilidade de estimativas e a matriz de rastreabilidade normativa executados sobre as Demonstrações Financeiras Padronizadas (DFP) consolidadas da **Frasle Mobility S.A.** relativas ao exercício social encerrado em 31 de dezembro de 2025.
+t_sens <- data.frame(Cenário = sens$cenario, WACC = sens$wacc_aplicado,
+                     `Valor recuperável (R$ mil)` = fmt(sens$valor_recuperavel_mil, 0),
+                     `Margem` = paste0(fmt(sens$margem_pct, 1), "%"),
+                     `Perda simulada (R$ mil)` = fmt(sens$impairment_necessario_mil, 0), check.names = FALSE)
 
-O escopo dos exames concentrou-se na rubrica de **Ativos Intangíveis** (saldo de **R$ 1.874.550 mil**, representando **25,95% do Ativo Total**), dada a materialidade e a subjetividade inerente ao reconhecimento de ágio por expectativa de rentabilidade futura (*goodwill*), identificação de marcas e carteiras de clientes decorrentes de combinações de negócios, bem como a mensuração de vidas úteis e testes de redução ao valor recuperável (*impairment*).
+t_det <- data.frame(Tipo = det$categoria, Inseridos = det$erros_inseridos,
+                    Sinalizados = det$erros_sinalizados_pelo_teste,
+                    `Não detectados` = det$erros_inseridos - det$erros_sinalizados_pelo_teste,
+                    `Detecção` = paste0(fmt(det$taxa_deteccao_pct, 1), "%"), check.names = FALSE)
 
-Todos os procedimentos foram modelados sob as diretrizes das Normas Brasileiras de Contabilidade Técnicas de Auditoria (NBC TA), com rotinas estatísticas e reconciliações automatizadas na linguagem R para assegurar 100% de reprodutibilidade acadêmica.
+t_sinal <- data.frame(Teste = sinal$teste, `Registros sinalizados` = fmt(sinal$registros_sinalizados, 0),
+                      check.names = FALSE)
 
----
+t_matriz <- data.frame(Atividade = matriz$norma, Status = matriz$status_cobertura,
+                       Evidência = matriz$evidencia_vinculada, check.names = FALSE)
 
-### 3. Fontes de Informação e Metodologia
+nao_det <- sum(det$erros_inseridos - det$erros_sinalizados_pelo_teste)
+erros_total <- sum(det$erros_inseridos)
 
-Os procedimentos foram executados a partir de dados primários oficiais obtidos perante a Comissão de Valores Mobiliários (CVM) e o portal de Relações com Investidores da Frasle Mobility S.A., estruturados no repositório de trabalho conforme o arquivo `01_fontes/registro_fontes.csv`.
+# ------------------------------------------------------------------- texto
+linhas <- c(
+  "# Relatório Técnico — Dossiê Acadêmico de Auditoria",
+  "**Frasle Mobility S.A. | Exercício de 2025**",
+  "",
+  "## 1. Identificação",
+  "",
+  "- **Companhia analisada:** Frasle Mobility S.A. (Companhia Aberta, registro CVM 0155265)",
+  "- **Exercício:** 01/01/2025 a 31/12/2025, com comparativos de 2024",
+  "- **Instituição / disciplina:** Universidade de Brasília — Auditoria 1 (CCA0024), Turma 02, 2026.2",
+  "- **Docente:** Prof. Dr. Lucas Oliveira Gomes Ferreira",
+  "- **Estudante:** Pedro Henrique De Oliveira Sucupira (matrícula 241003375)",
+  paste0("- **Data de geração:** ", format(Sys.Date(), "%d/%m/%Y")),
+  "",
+  "## 2. Natureza do trabalho e como ler os resultados",
+  "",
+  "Este é um trabalho acadêmico. Não houve contratação, acesso à companhia, contato com a administração nem opinião de auditoria. Cada resultado deste relatório é de um de três tipos:",
+  "",
+  "- **Evidência pública:** dado extraído das demonstrações financeiras publicadas na CVM (`01_fontes/`).",
+  "- **Planejado — não executado:** procedimento descrito, mas que dependeria de acesso que não existiu.",
+  "- **Simulação:** teste sobre a base sintética de 500.000 registros ou sobre premissas hipotéticas; vale só para a simulação e não é evidência sobre a companhia.",
+  "",
+  "A coluna de status da matriz de cobertura (seção 10) classifica cada uma das 27 atividades. Nenhuma está marcada como executada em auditoria real.",
+  "",
+  "## 3. Fontes e método",
+  "",
+  "- Demonstrações financeiras consolidadas de 2025 e 2024 (CVM, documento 155265), consultadas em 23/10/2026 (`01_fontes/registro_fontes.csv`).",
+  "- Cálculos em R, numerados em `04_codigo/`, gerando os arquivos de `05_resultados/`. Este relatório lê esses arquivos para montar as tabelas e os resultados.",
+  "- A base sintética (`03_base_sintetica/`) foi gerada por código, é identificada como sintética em cada registro e foi construída para somar ao saldo público do intangível.",
+  "",
+  "## 4. Materialidade (NBC TA 320 e 450) — PT32",
+  "",
+  paste0("Foi adotado o **ativo total de 2025** como referencial principal, com materialidade global de R$ ", fmt(mg),
+         " mil. Os percentuais são premissas acadêmicas; a NBC TA 320 não fixa percentuais. A comparação com os demais referenciais, a partir das demonstrações consolidadas:"),
+  "",
+  md_tabela(t_ref),
+  "",
+  paste0("A materialidade adotada é a **mais alta** da comparação. Justificativa: o objeto do trabalho é uma conta patrimonial (o intangível, ",
+         fmt(saldo / refs$valor_2025_mil[refs$referencial == "Ativo total"] * 100, 2),
+         "% do ativo) e o lucro antes dos tributos variou ",
+         fmt(refs$variacao_pct[refs$referencial == "Lucro antes dos tributos"], 1),
+         "% no ano. O ativo total também variou ", fmt(refs$variacao_pct[refs$referencial == "Ativo total"], 1),
+         "%, então a escolha não se apoia em estabilidade. Como consequência, a amostra MUS fica menor (",
+         refs$selecoes_mus[refs$referencial == "Ativo total"], " seleções contra ",
+         refs$selecoes_mus[refs$referencial == "Lucro antes dos tributos"], " com o lucro antes dos tributos)."),
+  "",
+  md_tabela(t_mat),
+  "",
+  "Detalhe e cálculo editável: `02_papeis_trabalho/PT32_materialidade.csv` e `05_resultados/sensibilidade_mus_editavel.xlsx`.",
+  "",
+  "## 5. Procedimentos analíticos (NBC TA 520) — PT17",
+  "",
+  "Evidência pública: comparação dos saldos consolidados de 2024 e 2025.",
+  "",
+  md_tabela(t_anal),
+  "",
+  "As variações são sinais para investigação, não erros. A demonstração dos fluxos de caixa consolidada registra saída de R$ 2.090.324 mil em combinação de negócios em 2025, compatível com o crescimento do intangível, mas a alocação do preço de aquisição e o teste de ágio não foram examinados e as explicações da administração não foram obtidas.",
+  "",
+  "## 6. Reconciliação aritmética do intangível — PT05",
+  "",
+  paste0("Evidência pública: saldo inicial R$ ", fmt(reco$saldo_inicial_R_mil, 0), " mil + movimentações R$ ",
+         fmt(reco$total_movimentacoes_R_mil, 0), " mil = R$ ", fmt(reco$saldo_calculado_R_mil, 0),
+         " mil, igual ao saldo divulgado; diferença de R$ ", fmt(reco$diferenca_R_mil, 0),
+         " mil. A reconciliação aritmética não comprova existência, direitos, mensuração nem recuperabilidade."),
+  "",
+  "## 7. Base sintética e testes de detecção — PT06 e PT_450 (simulação)",
+  "",
+  paste0("A base tem 500.000 registros e ", erros_total, " erros inseridos deliberadamente. Resultado dos testes automáticos em R:"),
+  "",
+  md_tabela(t_det),
+  "",
+  paste0("**", nao_det, " erros inseridos não foram detectados.** O arquivo `05_resultados/erros_vida_util_nao_detectados.csv` deveria listar os de vida útil e precisa ser revisto. O teste de indicador de impairment sinalizou mais registros do que os erros inseridos:"),
+  "",
+  md_tabela(t_sinal),
+  "",
+  "A maior parte das sinalizações de indicador de impairment corresponde ao estado 'Nao avaliado', que é um valor válido na simulação e que o teste também sinaliza; essas sinalizações não foram investigadas individualmente.",
+  "",
+  "## 8. Amostragem por unidade monetária — PT_530 (simulação)",
+  "",
+  paste0("Sobre a base sintética (R$ ", fmt(as.numeric(mus_v("Valor monetário da população (V)")), 0),
+         " mil): confiança de 95%, materialidade de execução de R$ ", fmt(me),
+         " mil, intervalo de R$ ", fmt(as.numeric(mus_v("Intervalo de amostragem (J)"))),
+         " mil e ", mus_v("Número de seleções (n = V / J, arredondado para cima)"),
+         " seleções, sorteadas com semente ", mus_v("Semente do sorteio"),
+         ". A lista dos itens está em `05_resultados/mus_amostra_selecionada.csv`."),
+  "",
+  paste0("Resultado: ", mus_v("Erros encontrados na amostra"), " erro(s) inserido(s) entre os itens selecionados; limite superior de distorção de R$ ",
+         fmt(as.numeric(mus_v("Limite superior de distorção (Stringer, 95%)"))), " mil contra materialidade de execução de R$ ", fmt(me), " mil."),
+  "",
+  paste0("Limite desta evidência: os ", erros_total, " erros inseridos somam apenas R$ 1.056,35 mil de valor contábil; uma amostra dessa dimensão tem baixa chance de encontrá-los, e a ausência de erros na amostra não prova a ausência de erros na base. A conclusão vale só para a simulação."),
+  "",
+  "## 9. Sensibilidade de um DCF didático — PT02 (simulação)",
+  "",
+  "O modelo abaixo é **didático e ilustrativo**: fluxo de caixa, WACC e crescimento são premissas hipotéticas do autor, não o modelo da administração da Frasle nem dado público. O exercício demonstra o método de sensibilidade; **não conclui sobre a razoabilidade da estimativa real**, que não foi testada (método, dados, premissas e viés da administração permanecem fora do alcance).",
+  "",
+  paste0("Premissas hipotéticas: fluxo de caixa de R$ ", fmt(sens$fluxo_caixa_hipotetico_mil[1], 0),
+         " mil por ano, g de ", sens$taxa_g[1], ". Valor contábil comparado: R$ ", fmt(saldo, 0), " mil."),
+  "",
+  md_tabela(t_sens),
+  "",
+  paste0("Ponto de ruptura do modelo ilustrativo: WACC de ", fmt(rup$valor[1]), "% (", fmt(rup$valor[2]),
+         " p.p. acima do cenário base) ou queda de ", fmt(rup$valor[4], 1), "% no fluxo de caixa. Grade completa em `05_resultados/analise_sensibilidade_grade.csv`."),
+  "",
+  "## 10. Matriz de cobertura das 27 atividades",
+  "",
+  "Fonte: `06_matrizes/matriz_cobertura_normas.csv`. Todas as atividades têm status parcial ou planejado; o detalhe de cada resultado e de cada limitação está na matriz e no PT indicado.",
+  "",
+  md_tabela(t_matriz),
+  "",
+  "## 11. Relatório dos auditores independentes (evidência pública)",
+  "",
+  "O relatório da KPMG Auditores Independentes S.S., de 11 de março de 2026, que consta do documento da CVM, expressa opinião sem ressalva sobre as demonstrações individuais e consolidadas. Esse relatório é de terceiros e não substitui nem foi revisado por este trabalho.",
+  "",
+  "## 12. Exceções não resolvidas e limites do alcance",
+  "",
+  paste0("- ", nao_det, " dos ", erros_total, " erros simulados não foram detectados pelos testes e seguem sem investigação."),
+  "- As sinalizações de indicador de impairment acima dos erros inseridos não foram investigadas.",
+  "- O efeito monetário dos erros simulados foi medido só para amortização inconsistente; vida útil e indicador de impairment não têm efeito monetário direto na base.",
+  "- A estimativa de recuperabilidade real, os controles internos, as confirmações externas, as representações da administração e os componentes do grupo não foram examinados: não houve acesso.",
+  "- Os papéis de trabalho de várias normas têm natureza conceitual ou de planejamento. A documentação ainda precisa consolidar versões duplicadas e padronizar o esquema de colunas dos PTs antigos.",
+  "",
+  "## 13. Conclusão",
+  "",
+  paste0("Com base apenas em informações públicas e em uma base sintética, este trabalho (i) fixou e justificou a materialidade com comparação de quatro referenciais, (ii) verificou que o saldo do intangível reconcilia aritmeticamente com a nota publicada, (iii) demonstrou testes de detecção e uma amostra MUS reproduzível sobre dados simulados e (iv) demonstrou o método de sensibilidade com premissas hipotéticas. ",
+         "Não é possível concluir sobre a existência, a mensuração ou a recuperabilidade do intangível da companhia, nem sobre as demais contas. Os resultados sobre a base sintética não se aplicam à Frasle Mobility S.A."),
+  "",
+  "## 14. Referências",
+  "",
+  "- CFC: Normas Brasileiras de Contabilidade Técnicas de Auditoria (NBC TA 200 a 600).",
+  "- CVM: Demonstrações Financeiras Padronizadas (DFP 2025) — Frasle Mobility S.A. (documento 155265).",
+  "- Portal de Relações com Investidores: ri.fraslemobility.com."
+)
 
-A metodologia de exame estruturou-se em cinco pilares analíticos:
+con <- file("02_papeis_trabalho/relatorio_tecnico_v2.md", open = "w", encoding = "UTF-8")
+writeLines(linhas, con)
+close(con)
+cat("Relatório gerado: 02_papeis_trabalho/relatorio_tecnico_v2.md\n")
 
-1. **Fixação Formal do Triângulo de Materialidade (NBC TA 320 / NBC TA 450):** Definição quantitativa da Materialidade Global, Materialidade de Execução, Limite para Distorções Irrelevantes (LDI) e Materialidade Específica com base em *benchmark* patrimonial fundamentado.
-2. **Procedimentos Analíticos Substantivos (NBC TA 520):** Avaliação de variações patrimoniais horizontais e verticais relevantes entre 2024 e 2025.
-3. **Reconciliação Aritmética Automatizada:** Verificação da movimentação contábil dos saldos iniciais, adições, baixas, amortizações e saldos finais divulgações nas Notas Explicativas.
-4. **Amostragem por Unidade Monetária — MUS (NBC TA 530):** Seleção probabilística proporcional ao tamanho sobre a população de ativos intangíveis, com determinação formal do tamanho amostral ($n = 104$) e projeção estatística de distorções.
-5. **Auditoria de Estimativas Contábeis & Sensibilidade (NBC TA 540):** Teste de estressamento determinístico do modelo de Fluxo de Caixa Descontado (FCD) para avaliação de *impairment*, variando a taxa de desconto (WACC) entre 9,5% e 16,5%.
-
----
-
-### 4. Determinação e Justificativa da Materialidade (NBC TA 320 / NBC TA 450)
-
-Em conformidade com a NBC TA 320, a definição da materialidade exige julgamento profissional sobre a base de referência (*benchmark*) que melhor reflita a estrutura operacional e os interesses dos usuários das demonstrações contábeis.
-
-Para a Frasle Mobility S.A., selecionou-se o **Ativo Total de 2025 (R$ 7.222.660,00 mil)** como *benchmark* principal. A escolha justifica-se pelo perfil industrial de capital intensivo da companhia, onde a infraestrutura patrimonial e a base de ativos refletem a real capacidade de geração de valor, oferecendo estabilidade analítica frente a oscilações conjunturais no resultado líquido.
-
-Os parâmetros formais de auditoria foram calculados no arquivo `05_resultados/calculo_materialidade.csv` e documentados no papel de trabalho `PT32_materialidade.txt`:
-
-| Parâmetro de Auditoria | Base de Cálculo | Percentual Aplicado | Valor Apurado (R$ mil) | Finalidade Normativa (NBC TA) |
-| :--- | :--- | :---: | :---: | :--- |
-| **Ativo Total (Benchmark)** | DFP Consolidadas 2025 | 100,0% | **R$ 7.222.660,00** | Referência patrimonial global da entidade. |
-| **Materialidade Global ($M$)** | Ativo Total | 1,0% | **R$ 72.226,60** | Limiar máximo de distorção tolerável para o conjunto das DFPs (NBC TA 320). |
-| **Materialidade de Execução ($ME$)** | Materialidade Global | 75,0% | **R$ 54.169,95** | Margem de segurança para reduzir a nível aceitavelmente baixo a probabilidade de distorções acumuladas excederem $M$. |
-| **Limite para Distorções Irrelevantes ($LDI$)** | Materialidade Global | 5,0% | **R$ 3.611,33** | Limiar abaixo do qual as distorções são consideradas manifestamente insignificantes para acúmulo no resumo de distorções (NBC TA 450). |
-| **Materialidade Específica (Intangível)** | Saldo do Intangível | 1,0% | **R$ 18.745,50** | Corte específico para exames substantivos na conta de Ativos Intangíveis (R$ 1.874.550 mil). |
-
----
-
-### 5. Procedimentos Analíticos Substantivos (NBC TA 520)
-
-A análise horizontal comparativa entre os exercícios de 2024 e 2025 revelou expansão patrimonial expressiva, impulsionada por aquisições estratégicas e combinações de negócios no setor autopecas:
-
-| Rubrica Patrimonial | Saldo 2024 (R$ mil) | Saldo 2025 (R$ mil) | Variação Absoluta (R$ mil) | Variação Relativa (%) | Avaliação de Risco de Auditoria |
-| :--- | :---: | :---: | :---: | :---: | :--- |
-| **Ativo Total** | R$ 4.869.614,00 | R$ 7.222.660,00 | +R$ 2.353.046,00 | +48,32% | Expansão relevante de porte patrimonial. |
-| **Ativos Intangíveis** | R$ 586.859,00 | R$ 1.874.550,00 | +R$ 1.287.691,00 | **+219,42%** | **Risco Crítico:** Alocação de PPA e teste de *goodwill*. |
-| **Imobilizado e Arrendamentos** | R$ 969.835,00 | R$ 1.451.000,00 | +R$ 481.165,00 | +49,61% | Risco Moderado: Testes de adições e depreciação. |
-| **Estoques** | R$ 1.054.805,00 | R$ 1.443.500,00 | +R$ 388.695,00 | +36,85% | Risco Moderado: Valuation e provisão para obsolescência. |
-| **Caixa e Equivalentes** | R$ 844.900,00 | R$ 1.316.267,00 | +R$ 471.367,00 | +55,79% | Risco Baixo: Confirmação bancária externa (PT-505). |
-
-**Apontamento de Auditoria:** O crescimento de +219,42% nos Ativos Intangíveis supera significativamente a taxa de expansão do Ativo Total (+48,32%), confirmando a necessidade de direcionar os testes substantivos para a correta identificação dos ativos intangíveis adquiridos em combinações de negócios e testes de recuperação de valor.
-
----
-
-### 6. Reconciliação Aritmética do Ativo Intangível
-
-A verificação contábil da movimentação do Ativo Intangível no exercício de 2025 foi executada via script R (`04_codigo/41_calculo_materialidade.R`), demonstrando exatidão aritmética entre os registros de abertura e encerramento:
-
-$$ \text{Saldo Inicial (2024)} + \text{Movimentações Líquidas (2025)} = \text{Saldo Final Calculado (2025)} $$
-
-$$ \text{R\$ } 586.859,00\text{ mil} + \text{R\$ } 1.287.691,00\text{ mil} = \text{R\$ } 1.874.550,00\text{ mil} $$
-
-- **Saldo Final Divulgado na DFP 2025:** R$ 1.874.550,00 mil
-- **Diferença Aritmética Apurada:** **R$ 0,00 (Zero)**
-- **Conclusão de Auditoria:** Os saldos das notas explicativas apresentam perfeita consistência matemática com as demonstrações consolidadas.
-
----
-
-### 7. Amostragem Estatística por Unidade Monetária — MUS (NBC TA 530)
-
-Para a validação da população de Ativos Intangíveis (R$ 1.874.550 mil divididos analiticamente em base sintética de 500.000 registros), aplicou-se a Amostragem por Unidade Monetária (MUS), formalizada no papel de trabalho PT-530 (`05_resultados/amostragem_mus_projecao.csv`).
-
-#### Parâmetros do Plano Amostral:
-- **Nível de Confiança:** 95,0% (Fator de Confiabilidade de Poisson $\text{RF} = 3,0$)
-- **Materialidade de Execução ($ME$):** R$ 54.169,95 mil
-- **Intervalo de Amostragem ($J$):** 
-  $$ J = \frac{ME}{RF} = \frac{\text{R\$ } 54.169,95\text{ mil}}{3,0} = \text{R\$ } 18.056,65\text{ mil} $$
-- **Tamanho Amostral ($n$):**
-  $$ n = \frac{\text{Valor da População}}{J} = \frac{\text{R\$ } 1.874.550,00\text{ mil}}{\text{R\$ } 18.056,65\text{ mil}} = 103,81 \longrightarrow \mathbf{104\text{ itens monetários}} $$
-
-#### Resultado da Amostragem:
-A projeção linear de distorção resultou em **R$ 0,00**, confirmando que a distorção projetada na população não excede a Materialidade de Execução ($ME$).
-
-#### Algoritmo de Validação em Base Sintética (500.000 registros com 250 erros inseridos):
-- **Teste de Vida Útil (79 erros):** 55 erros detectados por rotina R (69,62% de eficácia).
-- **Teste de Indicadores de Impairment (86 erros):** 86 erros detectados (100,00% de eficácia).
-- **Teste de Inconsistência de Amortização (85 erros):** 57 erros detectados (67,06% de eficácia).
-
----
-
-### 8. Auditoria de Estimativas & Sensibilidade do Impairment (NBC TA 540)
-
-A auditoria sobre a recuperabilidade do ágio e ativos intangíveis baseou-se na modelagem de Fluxo de Caixa Descontado (FCD). O modelo base da administração considerou uma taxa de desconto WACC de **11,5%** e taxa de crescimento na perpetuidade ($g$) de **3,0%**, gerando um fluxo operacional de R$ 250.000,00 mil/ano.
-
-Para testar a resiliência do valor recuperável, executou-se a análise determinística de sensibilidade documentada no PT-540 (`05_resultados/analise_sensibilidade_impairment.csv`):
-
-$$ \text{Valor Recuperável } (V_{rec}) = \frac{\text{Fluxo de Caixa}}{\text{WACC} - g} $$
-
-| Cenário de Teste | Taxa WACC | Perpétua ($g$) | Valor Recuperável ($V_{rec}$) | Valor Contábil | Folha / Estresse (*Slack*) | Diagnóstico de Auditoria |
-| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Otimista** | 9,5% | 3,0% | R$ 3.846.153,85 mil | R$ 1.874.550,00 mil | +105,2% | Sem necessidade de impairment. |
-| **Cenário Base** | **11,5%** | **3,0%** | **R$ 2.941.176,47 mil** | **R$ 1.874.550,00 mil** | **+56,9%** | **Margem confortável (+R$ 1,06 bilhão).** |
-| **Estresse 1 (+1,5%)**| 13,0% | 3,0% | R$ 2.500.000,00 mil | R$ 1.874.550,00 mil | +33,4% | Sem necessidade de impairment. |
-| **Estresse 2 (+3,5%)**| 15,0% | 3,0% | R$ 2.083.333,33 mil | R$ 1.874.550,00 mil | +11,1% | Suporta estresse severo. |
-| **Break-Even Limit** | **16,5%** | **3,0%** | **R$ 1.851.851,85 mil** | **R$ 1.874.550,00 mil** | **-1,2%** | **Ponto de Ruptura (Impairment de R$ 22,7 mil).** |
-
-**Conclusão de Auditoria (NBC TA 540):** O Teste de *Impairment* da Frasle Mobility S.A. possui elevada margem de segurança. Seria necessário um choque adverso de **+5,0% na taxa WACC** (elevando-a de 11,5% para 16,5%) para que o valor recuperável ficasse abaixo do valor contábil, atestando a razoabilidade das estimativas contábeis da administração.
-
----
-
-### 9. Matriz de Cobertura Normativa dos 27 Papéis de Trabalho
-
-Todos os 27 Papéis de Trabalho foram individualizados em formato `.csv` e `.txt` na pasta `02_papeis_trabalho/` e consolidados na matriz de rastreabilidade `06_matrizes/matriz_cobertura_normas.csv`:
-
-| Categoria Normativa | Papéis de Trabalho (PTs) Vinculados | Norma Relevante | Artefato / Script de Suporte | Status de Execução |
-| :--- | :--- | :--- | :--- | :---: |
-| **Estrutura Conceitual & Geral** | PT-EC, PT-200, PT-210, PT-220, PT-230 | NBC TA 200, 210, 220, 230 | Termos de engajamento e ceticismo | **Concluído (100%)** |
-| **Riscos, Fraude e Governança** | PT-240, PT-250, PT-260, PT-265 | NBC TA 240, 250, 260, 265 | Avaliação de riscos e fraude | **Concluído (100%)** |
-| **Planejamento e Materialidade** | PT-300, PT-315, PT-320, PT-330 | NBC TA 300, 315, 320, 330 | `41_calculo_materialidade.R` | **Concluído (100%)** |
-| **Serviços & Distorções** | PT-402, PT-450 | NBC TA 402, NBC TA 450 | Sumário de distorções e LDI | **Concluído (100%)** |
-| **Evidências & Procedimentos** | PT-500, PT-501, PT-505, PT-510, PT-520, PT-530, PT-540, PT-550 | NBC TA 500 a 550 | `18_atualizar_pt02_impairment.R` | **Concluído (100%)** |
-| **Conclusão & Grupo** | PT-560, PT-570, PT-580, PT-600 | NBC TA 560, 570, 580, 600 | `39_gerar_relatorio_tecnico.R` | **Concluído (100%)** |
-
----
-
-### 10. Exame do Relatório dos Auditores Independentes (CVM)
-
-Conforme consulta pública ao documento CVM nº 155265, o relatório de auditoria independente emitido pela **KPMG Auditores Independentes** em 11 de março de 2026 expressou **Opinião Sem Ressalvas** (opinião limpa) sobre as demonstrações financeiras consolidadas da Frasle Mobility S.A. relativas ao exercício social de 2025.
-
----
-
-### 11. Limitações Metodológicas
-
-Este dossiê possui caráter estritamente acadêmico desenvolvido para a disciplina Auditoria 1 da Universidade de Brasília (UnB). Os exames efetuados sobre a base sintética de 500.000 registros e os testes de sensibilidade aplicam-se a simulações de modelagem, não substituindo o trabalho presencial nem o acesso aos livros diários e razões internos da entidade.
-
----
-
-### 12. Conclusão Final
-
-Os exames de auditoria executados sobre a Frasle Mobility S.A. confirmam que:
-1. A **Materialidade Global (R$ 72.226,60 mil)** e de **Execução (R$ 54.169,95 mil)** foram formalmente justificadas com base no Ativo Total.
-2. A reconciliação do saldo de **Ativos Intangíveis (R$ 1.874.550 mil)** apresentou **diferença zero**.
-3. A amostragem **MUS ($n = 104$)** confirmou a razoabilidade do saldo populacional sem projeção de distorções.
-4. O teste de **sensibilidade do WACC** comprovou a solidez da avaliação do intangível contra riscos de *impairment*.
-
----
-
-### 13. Referências Normativas
-
-- **CFC:** Normas Brasileiras de Contabilidade Técnicas de Auditoria (NBC TA 200 a 600).
-- **CVM:** Demonstrações Financeiras Padronizadas (DFP 2025) — Frasle Mobility S.A.
-- **Portal RI:** Portal de Relações com Investidores (ri.fraslemobility.com).
-)"
-
-# Escreve os arquivos Markdown atualizados
-writeLines(texto_md, "02_papeis_trabalho/relatorio_tecnico_v2.md", useBytes = TRUE)
-writeLines(texto_md, "02_papeis_trabalho/relatorio_tecnico_dossie.md", useBytes = TRUE)
-
-cat("Relatórios Markdown atualizados com sucesso.\n")
-
-# Recompila o PDF via Rmarkdown se o pacote estiver instalado
 if (requireNamespace("rmarkdown", quietly = TRUE)) {
-  rmarkdown::render(
-    input = "02_papeis_trabalho/relatorio_tecnico_v2.md",
-    output_file = "relatorio_tecnico_v2.pdf"
-  )
-  cat("PDF gerado com sucesso: 02_papeis_trabalho/relatorio_tecnico_v2.pdf\n")
+  try(rmarkdown::render(input = "02_papeis_trabalho/relatorio_tecnico_v2.md",
+                        output_file = "relatorio_tecnico_v2.pdf", quiet = TRUE), silent = TRUE)
+  cat("Tentativa de gerar o PDF concluída (exige LaTeX instalado).\n")
 } else {
-  cat("Aviso: Instale/ative o pacote rmarkdown para gerar o PDF automaticamente.\n")
+  cat("Aviso: instale o pacote rmarkdown para gerar o PDF automaticamente.\n")
 }

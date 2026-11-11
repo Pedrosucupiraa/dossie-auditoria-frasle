@@ -1,7 +1,7 @@
-cenario,wacc_aplicado,taxa_g,valor_recuperavel_mil,valor_contabil_mil,impairment_necessario_mil,variacao_vs_base_mil,conclusao_auditoria
-WACC Otimista (-2.0%),9.50%,3.00%,3846153.85,1874550.00,0.00,904977.38,Sem indício de imparidade; margem de segurança de +105%
-WACC Favorável (-1.0%),10.50%,3.00%,3333333.33,1874550.00,0.00,392156.86,Sem indício de imparidade; margem de segurança de +77.8%
-Cenário Base (WACC 11.5%),11.50%,3.00%,2941176.47,1874550.00,0.00,0.00,Valor recuperável excede valor contabilístico em 56.9%
-WACC Estressado (+1.0%),12.50%,3.00%,2631578.95,1874550.00,0.00,-309597.52,Sem imparidade; margem de segurança reduz-se para +40.4%
-WACC Severo (+2.0%),13.50%,3.00%,2380952.38,1874550.00,0.00,-560224.09,Sem imparidade; ativo permanece coberto pelo valor em uso
-WACC Crítico (+5.0%),16.50%,3.00%,1851851.85,1874550.00,22698.15,-1089324.62,Ponto de rutura: surge necessidade de impairment de R$ 22.698 mil
+"cenario","wacc_aplicado","taxa_g","fluxo_caixa_hipotetico_mil","valor_recuperavel_mil","valor_contabil_mil","impairment_necessario_mil","margem_pct","variacao_vs_base_mil","conclusao","natureza"
+"WACC -2.0 p.p.","9.50%","3.00%",250000,3846153.85,1874550,0,105.2,904977.38,"Valor recuperável excede o contábil em 105,2%","Simulação didática - premissas hipotéticas, não é a estimativa da administração"
+"WACC -1.0 p.p.","10.50%","3.00%",250000,3333333.33,1874550,0,77.8,392156.86,"Valor recuperável excede o contábil em 77,8%","Simulação didática - premissas hipotéticas, não é a estimativa da administração"
+"Cenário base","11.50%","3.00%",250000,2941176.47,1874550,0,56.9,0,"Valor recuperável excede o contábil em 56,9%","Simulação didática - premissas hipotéticas, não é a estimativa da administração"
+"WACC +1.0 p.p.","12.50%","3.00%",250000,2631578.95,1874550,0,40.4,-309597.52,"Valor recuperável excede o contábil em 40,4%","Simulação didática - premissas hipotéticas, não é a estimativa da administração"
+"WACC +2.0 p.p.","13.50%","3.00%",250000,2380952.38,1874550,0,27,-560224.09,"Valor recuperável excede o contábil em 27,0%","Simulação didática - premissas hipotéticas, não é a estimativa da administração"
+"WACC +5.0 p.p.","16.50%","3.00%",250000,1851851.85,1874550,22698.15,-1.2,-1089324.62,"Valor recuperável abaixo do contábil: perda simulada de R$ 22.698 mil","Simulação didática - premissas hipotéticas, não é a estimativa da administração"

@@ -1,4 +1,3 @@
-
 # PROGRAMA 11 - Deteccao independente de excecoes
 # Base 100% sintetica para fins educacionais.
 # Os resultados nao representam auditoria de registros reais.

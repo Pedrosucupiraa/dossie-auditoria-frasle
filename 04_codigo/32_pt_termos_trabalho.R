@@ -1,5 +1,3 @@
-
-
 # PT19 - Termos do trabalho de auditoria
 # Norma: NBC TA 210
 # Analise conceitual aplicada ao trabalho academico

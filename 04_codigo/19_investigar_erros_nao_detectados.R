@@ -1,58 +1,49 @@
+# 04_codigo/19_investigar_erros_nao_detectados.R
+# Investiga os erros inseridos que cada teste, ISOLADAMENTE, não detectou.
+# Base exclusivamente sintética, para fins acadêmicos.
+#
+# Correção: a versão anterior comparava com registros_sinalizados.csv, que reúne os
+# registros sinalizados por QUALQUER dos três testes (inclui ~100 mil "Nao avaliado"),
+# e por isso o resultado saía vazio. Aqui cada erro é confrontado com o SEU teste:
+#   * vida útil: vida_util_anos < 3 e tipo_intangivel != "Goodwill" (mesma regra do script 11)
+#   * amortização: |acumulada - esperada| > tolerância (a base grava 6 casas decimais)
+# Rode depois do script 11.
 
-# Investigar erros de vida util nao detectados
-# Base exclusivamente sintetica para fins academicos
+erros <- read.csv("03_base_sintetica/log_erros_inseridos.csv", fileEncoding = "UTF-8")
 
-# 1. Ler o log de erros inseridos
-erros <- read.csv(
-  "03_base_sintetica/log_erros_inseridos.csv",
-  fileEncoding = "UTF-8"
-)
+TOL <- 2e-6   # tolerância de arredondamento (6 casas decimais)
 
-# 2. Ler os registros sinalizados pelo teste
-sinalizados <- read.csv(
-  "05_resultados/registros_sinalizados.csv",
-  fileEncoding = "UTF-8"
-)
+teste_vida_util <- !is.na(erros$vida_util_anos) & erros$vida_util_anos < 3 &
+  erros$tipo_intangivel != "Goodwill"
+teste_amort <- abs(erros$amortizacao_acumulada_mil - erros$amortizacao_esperada_mil) > TOL
 
-# 3. Separar os erros inseridos de vida util inadequada
-erros_vida_util <- subset(
-  erros,
-  tipo_erro == "Vida util inadequada"
-)
+vu   <- erros[erros$tipo_erro == "Vida util inadequada", ]
+vu_nd <- vu[!teste_vida_util[erros$tipo_erro == "Vida util inadequada"], ]
+am   <- erros[erros$tipo_erro == "Amortizacao inconsistente", ]
+am_nd <- am[!teste_amort[erros$tipo_erro == "Amortizacao inconsistente"], ]
 
-# 4. Identificar quais desses registros foram sinalizados
-nao_detectados <- erros_vida_util[
-  !erros_vida_util$id_registro %in% sinalizados$id_registro,
-]
+cat("Vida útil: inseridos", nrow(vu), "| detectados pelo teste", nrow(vu) - nrow(vu_nd),
+    "| NÃO detectados", nrow(vu_nd), "\n")
+cat("Amortização: inseridos", nrow(am), "| detectados pelo teste", nrow(am) - nrow(am_nd),
+    "| NÃO detectados", nrow(am_nd), "\n")
 
-# 5. Exibir os resultados
-cat("Erros de vida util inseridos:", nrow(erros_vida_util), "\n")
-cat("Erros de vida util nao detectados:", nrow(nao_detectados), "\n")
+cat("\nVida útil não detectada, por tipo de intangível:\n")
+print(table(vu_nd$tipo_intangivel, useNA = "ifany"))
+cat("\nAmortização não detectada, por tipo de intangível:\n")
+print(table(am_nd$tipo_intangivel, useNA = "ifany"))
 
-# 6. Mostrar os registros nao detectados
-print(nao_detectados)
+cat("\nValor original dos não detectados (R$ mil): vida útil =",
+    round(sum(vu_nd$valor_original_mil), 2), "| amortização =",
+    round(sum(am_nd$valor_original_mil), 2), "\n")
 
-# 7. Salvar uma copia para analise
-write.csv(
-  nao_detectados,
-  "05_resultados/erros_vida_util_nao_detectados.csv",
-  row.names = FALSE,
-  fileEncoding = "UTF-8"
-)
+cat("\nLeitura: os erros não detectados são de Goodwill, excluído do teste de vida útil",
+    "\npor regra (goodwill tem vida útil indefinida, testado por impairment).",
+    "\nO limite é do desenho do teste, não falha de execução.\n")
 
-
-# Conferencia dos totais e das categorias
-
-cat("\n--- LOG DE ERROS INSERIDOS ---\n")
-print(table(erros$tipo_erro, useNA = "ifany"))
-
-cat("\n--- REGISTROS SINALIZADOS ---\n")
-print(names(sinalizados))
-print(nrow(sinalizados))
-
-cat("\n--- VIDA UTIL POR TIPO DE INTANGIVEL ---\n")
-print(table(erros_vida_util$tipo_intangivel, useNA = "ifany"))
-
-cat("\n--- VIDA UTIL NAO DETECTADA POR TIPO ---\n")
-print(table(nao_detectados$tipo_intangivel, useNA = "ifany"))
-
+dir.create("05_resultados", showWarnings = FALSE)
+write.csv(vu_nd, "05_resultados/erros_vida_util_nao_detectados.csv",
+          row.names = FALSE, fileEncoding = "UTF-8")
+write.csv(am_nd, "05_resultados/erros_amortizacao_nao_detectados.csv",
+          row.names = FALSE, fileEncoding = "UTF-8")
+cat("\nGravados: erros_vida_util_nao_detectados.csv (", nrow(vu_nd), ") e ",
+    "erros_amortizacao_nao_detectados.csv (", nrow(am_nd), ")\n", sep = "")
