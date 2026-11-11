@@ -1,0 +1,12 @@
+parametro_amostral,valor,unidade,observacao_tecnica
+População Total (N),500000,Registos,Universo completo da base sintética de intangíveis
+Valor Monetário da População (V),1874550.00,R$ mil,Soma reconciliada dos saldos contabilísticos
+Nível de Confiança,95,%,Risco de aceitação incorreta (AR) de 5%
+Fator de Confiança (CB),3.00,Fator de Poisson,Correspondente a zero erros esperados com 95% de confiança
+Materialidade de Execução (ME),54169.95,R$ mil,75% da Materialidade Global (definida no PT-32)
+Intervalo de Amostragem (J),18056.65,R$ mil,Calculado como ME / Fator de Confiança (54.169,95 / 3.0)
+Tamanho Amostral Calculado (n),104,Itens monetários,População V / Intervalo J (1.874.550 / 18.056,65)
+Itens com Valor > Intervalo,12,Registos,Testados a 100% (camada de valor elevado)
+Distorção Detetada na Amostra,0.00,R$ mil,Sem distorções monetárias acima do limite de tolerância
+Projeção de Distorção para População,0.00,R$ mil,Projeção linear nula no horizonte amostral de 95%
+Conclusão da Amostragem,Aprovado,,Saldo do Intangível livre de distorções relevantes com 95% de confiança

@@ -1,0 +1,3 @@
+codigo_pt,norma,procedimento,evidencia_vinculada,resultado_numers,conclusao_auditoria
+PT02-01,NBC TA 540,Recálculo do valor em uso do Ativo Intangível (R$ 1.874.550 mil),05_resultados/analise_sensibilidade_impairment.csv,Valor em uso base de R$ 2.941.176 mil excede o saldo contabilístico em R$ 1.066.626 mil,Sem necessidade de provisão no cenário base
+PT02-02,NBC TA 540,Análise de sensibilidade a variações de taxa de desconto WACC (±1% a ±5%),05_resultados/analise_sensibilidade_impairment.csv,Ponto de rutura atingido apenas com WACC de 16.5% (+5.0% acima do base),Estimativa razoável; premissas da administração são conservadoras e aceitáveis

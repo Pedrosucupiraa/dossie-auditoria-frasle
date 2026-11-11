@@ -1,0 +1,5 @@
+parametro,base_referencia,valor_base_mil,percentual_aplicado,valor_calculado_mil,justificativa
+Materialidade Global,Ativo Total 2025,7222660.00,1.0%,72226.60,Benchmark estável para estrutura industrial e patrimonial
+Materialidade Execucao,Materialidade Global,72226.60,75.0%,54169.95,Mitigacao do risco de distorcoes acumuladas nao detetadas
+Limite Distorcoes Irrelevantes,Materialidade Global,72226.60,5.0%,3611.33,Threshold de acumulacao no mapa de distorcoes (NBC TA 450)
+Materialidade Específica Intangivel,Ativo Intangivel,1874550.00,1.0%,18745.50,Aplicacao estrita sobre a base sintetica de 500k registos

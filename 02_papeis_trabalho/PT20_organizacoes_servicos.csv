@@ -1,0 +1,3 @@
+codigo_pt,norma,procedimento,evidencia_vinculada,resultado_numers,conclusao_auditoria
+PT20-01,NBC TA 402,Avaliação de serviços de TI e sistemas terceirizados em nuvem,01_fontes/155265_006211_20102026101023.pdf,Relatórios SOC 1/SOC 2 de prestadores de serviços de datacenter revisados,Garantia de integridade e segurança no processamento dos dados
+PT20-02,NBC TA 402,Verificação de controles complementares da Fras-le sobre prestadores,02_papeis_trabalho/PT23_gestao_qualidade.csv,Controles de acesso e perfil de usuários operando satisfatoriamente,Risco de dependência de terceiros devidamente mitigado
