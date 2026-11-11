@@ -9,13 +9,16 @@
 
 ## 1. O que este trabalho é (e o que não é)
 
-Trabalho acadêmico. Não houve contratação, acesso à companhia nem contato com a administração, e **nenhuma opinião de auditoria é emitida**. Todo resultado do dossiê é de um destes três tipos, e a coluna `Natureza` dos papéis de trabalho e a coluna `status_cobertura` da matriz informam qual:
+Trabalho acadêmico. Não houve contratação, acesso à companhia nem contato com a administração, e **nenhuma opinião de auditoria é emitida**. Todo resultado do dossiê é de um destes quatro tipos, e a coluna `Natureza` dos papéis de trabalho e a coluna `status_cobertura` da matriz informam qual:
 
 | Tipo | Significado |
 |------------------------------------|------------------------------------|
 | **Evidência pública** | Dado extraído das demonstrações financeiras publicadas na CVM (`01_fontes/`). |
 | **Planejado — não executado** | Procedimento descrito, mas que dependeria de acesso que não existiu (registros internos, confirmações, administração). |
 | **Simulação** | Teste sobre a base sintética de 500.000 registros ou sobre premissas hipotéticas. Vale só para a simulação; não é evidência sobre a companhia. |
+| **Conceitual ou preliminar (sem teste)** | Conceito normativo, delimitação de escopo ou triagem de risco sem procedimento executado. Não é evidência. |
+
+O texto original de cada linha da coluna `Natureza` está preservado em `06_matrizes/detalhes_procedimentos_pts.csv` (campo `Natureza_original`) e em `06_matrizes/log_padronizacao_natureza.csv`.
 
 Uma referência normativa, o volume de registros ou a reconciliação aritmética **não substituem** o julgamento sobre a afirmação examinada.
 
@@ -29,7 +32,7 @@ Uma referência normativa, o volume de registros ou a reconciliação aritmétic
 04_codigo/               Scripts em R (numerados)
 05_resultados/           Resultados gerados pelos scripts, incluindo a planilha editável
 06_matrizes/             Matriz de cobertura das 27 atividades e índices dos PTs
-relatorio_tecnico_v2.*   Relatório (gerado pelo script 39; fica em 02_papeis_trabalho/)
+relatorio_tecnico_v2.*   Relatório (gerado pelo script 39 em 02_papeis_trabalho/; cópia do PDF na raiz)
 ```
 
 **Esquema dos PTs:** `Codigo, Norma, Procedimento, Natureza, Evidencia, Resultado, Limitacao`. Os campos que não cabem nessas colunas (tema, risco, referências cruzadas, status, área, título, preparador, revisor, datas) estão preservados em:
@@ -52,13 +55,14 @@ A base sintética já está versionada em `03_base_sintetica/` (gerada e validad
 | Ordem | Script | O que produz |
 |------------------------|------------------------|------------------------|
 | 1 | `20_pt_fraude.R`, `21_pt_continuidade.R`, `22` a `34`, `36`, `37`, `38` (sem `21_atualizar_matriz.R`) | PT07 a PT24 (um script por PT) |
-| 2 | `43_pts_novos_expandidos.R` | `PT_230`, `PT_300`, `PT_315`, `PT_330`, `PT_450`, `PT_500` (e um `PT_530` provisório) |
+| 2 | `43_pts_novos_explandidos.R` | `PT_230`, `PT_300`, `PT_315`, `PT_330`, `PT_450`, `PT_500` (e um `PT_530` provisório) |
 | 3 | `18_atualizar_pt02_impairment.R` | Sensibilidade do DCF didático, amostra MUS, `PT02_nota16_impairment.csv` e `PT_530.csv` definitivo |
 | 4 | `41_calculo_materialidade.R` | Materialidade, comparação de referenciais e `PT32_materialidade.csv` |
 | 5 | `14_matriz_cobertura_normas.R` | Matriz de cobertura das 27 atividades |
 | 6 | `44_padronizar_pts.R` | Converte os PTs de 17, 14 e 8 colunas para o esquema de 7 colunas |
 | 7 | `45_consolidar_pts.R` | Consolida PT02 complementar e PT03 a PT06; arquiva versões anteriores |
-| 8 | `39_gerar_relatorio_tecnico.R` | Relatório técnico, lendo os CSVs de resultados |
+| 8 | `46_padronizar_natureza.R` | Reduz a coluna `Natureza` dos PTs aos quatro rótulos e grava o log |
+| 9 | `39_gerar_relatorio_tecnico.R` | Relatório técnico (`.md` e PDF), lendo os CSVs de resultados |
 
 Observações: o script 18 deve rodar **depois** do 43 (ele regrava o `PT_530.csv`). Os scripts 13, 15, 16 e 17 geraram os formatos anteriores de PT02 a PT06 e são históricos; não devem ser reexecutados depois do 45. Os scripts `21_atualizar_matriz.R`, `35_revisar_matriz_final.R` e `42_revisar_cobertura_normas.R` atualizavam a matriz num formato antigo e estão em `04_codigo/versoes_anteriores/`: a matriz atual vem apenas do script 14, que deve rodar depois dos scripts 20 a 38. O script 19 lista os erros inseridos que cada teste não detectou (`erros_vida_util_nao_detectados.csv` e `erros_amortizacao_nao_detectados.csv`, ambos de Goodwill, excluído do teste de vida útil). Se o console acusar objetos de outro script, rode `rm(list = ls())` antes de cada `source()`. O `01_estrutura.R` (exploração inicial, formatos antigos de PT02 a PT05) também é histórico e fica em `04_codigo/versoes_anteriores/`.
 
