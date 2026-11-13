@@ -11,16 +11,22 @@
 
 Trabalho acadêmico. Não houve contratação, acesso à companhia nem contato com a administração, e **nenhuma opinião de auditoria é emitida**. Todo resultado do dossiê é de um destes quatro tipos, e a coluna `Natureza` dos papéis de trabalho e a coluna `status_cobertura` da matriz informam qual:
 
-| Tipo | Significado |
+| Natureza oficial (P2) | Significado |
 |------------------------------------|------------------------------------|
-| **Evidência pública** | Dado extraído das demonstrações financeiras publicadas na CVM (`01_fontes/`). |
-| **Planejado — não executado** | Procedimento descrito, mas que dependeria de acesso que não existiu (registros internos, confirmações, administração). |
-| **Simulação** | Teste sobre a base sintética de 500.000 registros ou sobre premissas hipotéticas. Vale só para a simulação; não é evidência sobre a companhia. |
-| **Conceitual ou preliminar (sem teste)** | Conceito normativo, delimitação de escopo ou triagem de risco sem procedimento executado. Não é evidência. |
+| **Realizado com evidência pública** | Dado extraído das demonstrações financeiras publicadas na CVM (`01_fontes/`), com fonte e página. |
+| **Planejado por falta de acesso** | Procedimento descrito, mas que dependeria de acesso que não existiu (registros internos, confirmações, administração). Inclui o que antes era rotulado "Conceitual ou preliminar". |
+| **Simulado para fins didáticos** | Teste sobre a base sintética de 500.000 registros ou sobre premissas hipotéticas. Vale só para a simulação; não é evidência sobre a companhia. |
 
-O texto original de cada linha da coluna `Natureza` está preservado em `06_matrizes/detalhes_procedimentos_pts.csv` (campo `Natureza_original`) e em `06_matrizes/log_padronizacao_natureza.csv`.
+Os quatro rótulos antigos foram reduzidos aos três oficiais pelo script 47. Os textos anteriores constam em `06_matrizes/log_padronizacao_natureza.csv` (1ª padronização) e `06_matrizes/log_padronizacao_natureza_v2.csv` (esta).
 
 Uma referência normativa, o volume de registros ou a reconciliação aritmética **não substituem** o julgamento sobre a afirmação examinada.
+
+## 1.1 Nome da companhia e prazo
+
+- **Mudança de nome:** a Nota 1 da DFP informa que a **Frasle Mobility S.A.** foi "denominada até 31 de dezembro de 2025 como Frasle S.A."; as ações seguem negociadas na B3 sob **FRAS3** (DFP, p.66). A data efetiva da mudança e a eventual alteração do código de negociação não foram confirmadas além da Nota 1.
+- **Prazo:** a entrega prevista nas instruções era 25/10/2026; esta versão foi elaborada em 13/11/2026, após o prazo, e a aceitação cabe ao professor.
+- **Revisão:** o campo de revisão de todos os PTs está "Pendente de revisão"; nenhuma assinatura é simulada.
+- **Versões das normas:** registradas em `matriz_cobertura_normas.csv` a partir da lista do CFC (consultada em 11/11/2026). NBC TA 240 (R2) e 570 (R1) são de 25/09/2026, posteriores ao exercício; qual versão se aplica a 2025 deve ser confirmado.
 
 ## 2. Estrutura do repositório
 
@@ -32,6 +38,11 @@ Uma referência normativa, o volume de registros ou a reconciliação aritmétic
 04_codigo/               Scripts em R (numerados)
 05_resultados/           Resultados gerados pelos scripts, incluindo a planilha editável
 06_matrizes/             Matriz de cobertura das 27 atividades e índices dos PTs
+02_papeis_trabalho/roteiro/  27 PTs do roteiro (PT-EC.md, PT-200.md … PT-600.md) + roteiro_pts_consolidado.csv
+07_programas_auditoria/  Programas: receitas, disponibilidades, estoques, imobilizado, passivos, estimativas
+08_minutas/              Minutas didáticas (210, 260, 505, 580) — nenhuma enviada ou assinada
+09_conclusao_integrada.md  Conclusão integrada, sem opinião
+dossie_auditoria_frasle_P2.pdf  Dossiê PDF com referências cruzadas
 relatorio_tecnico_v2.*   Relatório (gerado pelo script 39 em 02_papeis_trabalho/; cópia do PDF na raiz)
 ```
 
@@ -44,7 +55,7 @@ Nenhum PT tem revisor independente: o campo de revisão está sempre "pendente".
 
 ## 3. Cobertura das 27 atividades
 
-A matriz `06_matrizes/matriz_cobertura_normas.csv` lista as 27 atividades (Estrutura Conceitual e NBC TA 200 a 600) com o procedimento, a evidência vinculada, o resultado, o status e a limitação de cada uma. **Todas têm status parcial ou planejado**; nenhuma é tratada como auditoria executada. As normas sem PT próprio no início do trabalho (230, 300, 315, 330, 450, 500 e 530) têm agora `PT_230.csv`, `PT_300.csv`, `PT_315.csv`, `PT_330.csv`, `PT_450.csv`, `PT_500.csv` e `PT_530.csv`. A NBC TA 540 é coberta pelo `PT02_nota16_impairment.csv` e pelo `PT02_procedimentos_complementares.csv`, e a NBC TA 320 pelo `PT32_materialidade.csv`.
+A matriz `06_matrizes/matriz_cobertura_normas.csv` lista as 27 atividades (Estrutura Conceitual e NBC TA 200 a 600) com o procedimento, a evidência vinculada, o resultado, o status e a limitação de cada uma. **Todas têm natureza e versão da norma registradas** (coluna `versao_norma`); nenhuma é tratada como auditoria executada. A matriz foi regerada pelo script 47 e liga cada atividade ao PT do roteiro em `02_papeis_trabalho/roteiro/`; os PTs antigos (PT02 … PT32) ficam como apoio e são citados como "Legado" em cada PT. As normas sem PT próprio no início do trabalho (230, 300, 315, 330, 450, 500 e 530) têm agora `PT_230.csv`, `PT_300.csv`, `PT_315.csv`, `PT_330.csv`, `PT_450.csv`, `PT_500.csv` e `PT_530.csv`. A NBC TA 540 é coberta pelo `PT02_nota16_impairment.csv` e pelo `PT02_procedimentos_complementares.csv`, e a NBC TA 320 pelo `PT32_materialidade.csv`.
 
 ## 4. Como reexecutar (ordem)
 
@@ -63,8 +74,11 @@ A base sintética já está versionada em `03_base_sintetica/` (gerada e validad
 | 7 | `45_consolidar_pts.R` | Consolida PT02 complementar e PT03 a PT06; arquiva versões anteriores |
 | 8 | `46_padronizar_natureza.R` | Reduz a coluna `Natureza` dos PTs aos quatro rótulos e grava o log |
 | 9 | `39_gerar_relatorio_tecnico.R` | Relatório técnico (`.md` e PDF), lendo os CSVs de resultados |
+| 10 | `python3 04_codigo/47_conformidade_p2.py` | 27 PTs do roteiro, matriz com versões, fontes, programas, minutas, conclusão integrada e Natureza nas 3 classes oficiais (substitui o 46 e a matriz do 14) |
+| 11 | `python3 04_codigo/48_gerar_xlsx.py` | `05_resultados/planilhas_editaveis_p2.xlsx` (materialidade, amostra MUS, reconciliação, analíticos, inseridos × detectados; com fórmulas) |
+| 12 | `python3 04_codigo/49_verificacao_p2.py` | Lista OK/FALTA contra as instruções do P2 |
 
-Observações: o script 18 deve rodar **depois** do 43 (ele regrava o `PT_530.csv`). Os scripts 13, 15, 16 e 17 geraram os formatos anteriores de PT02 a PT06 e são históricos; não devem ser reexecutados depois do 45. Os scripts `21_atualizar_matriz.R`, `35_revisar_matriz_final.R` e `42_revisar_cobertura_normas.R` atualizavam a matriz num formato antigo e estão em `04_codigo/versoes_anteriores/`: a matriz atual vem apenas do script 14, que deve rodar depois dos scripts 20 a 38. O script 19 lista os erros inseridos que cada teste não detectou (`erros_vida_util_nao_detectados.csv` e `erros_amortizacao_nao_detectados.csv`, ambos de Goodwill, excluído do teste de vida útil). Se o console acusar objetos de outro script, rode `rm(list = ls())` antes de cada `source()`. O `01_estrutura.R` (exploração inicial, formatos antigos de PT02 a PT05) também é histórico e fica em `04_codigo/versoes_anteriores/`.
+Observações: o script 18 deve rodar **depois** do 43 (ele regrava o `PT_530.csv`). Os scripts 13, 15, 16 e 17 geraram os formatos anteriores de PT02 a PT06 e são históricos; não devem ser reexecutados depois do 45. Os scripts `21_atualizar_matriz.R`, `35_revisar_matriz_final.R` e `42_revisar_cobertura_normas.R` atualizavam a matriz num formato antigo e estão em `04_codigo/versoes_anteriores/`: a matriz atual vem do script 47 (o 14 gerava a versão anterior; não rodar o 14 depois do 47). O script 19 lista os erros inseridos que cada teste não detectou (`erros_vida_util_nao_detectados.csv` e `erros_amortizacao_nao_detectados.csv`, ambos de Goodwill, excluído do teste de vida útil). Se o console acusar objetos de outro script, rode `rm(list = ls())` antes de cada `source()`. O `01_estrutura.R` (exploração inicial, formatos antigos de PT02 a PT05) também é histórico e fica em `04_codigo/versoes_anteriores/`.
 
 ## 5. Principais resultados (todos lidos de `05_resultados/`)
 
@@ -131,7 +145,11 @@ Simulação com **premissas hipotéticas**: fluxo de caixa de R\$ 250.000 mil po
 - Os percentuais de materialidade são premissas; o resultado da amostragem vale só para a base sintética.
 - Nenhum papel de trabalho foi revisado por terceiro.
 
-## 8. Conclusão
+## 8. Conclusão integrada
+
+Ver `09_conclusao_integrada.md`: nenhuma opinião é emitida. A base sintética (500.000 registros) reconcilia ao saldo do intangível; seu código está em `04_codigo/` e o arquivo (66,9 MB) cabe no limite do GitHub.
+
+### Conclusão do trabalho
 
 Com base em informações públicas e em uma base sintética, o trabalho: (i) fixou e justificou a materialidade com comparação de quatro referenciais; (ii) verificou que o saldo do intangível reconcilia aritmeticamente com a nota publicada; (iii) demonstrou testes de detecção e uma amostra MUS reproduzível sobre dados simulados; e (iv) demonstrou o método de sensibilidade com premissas hipotéticas. **Não é possível concluir** sobre a existência, a mensuração ou a recuperabilidade do intangível da companhia, nem sobre as demais contas. Os resultados sobre a base sintética não se aplicam à Frasle Mobility S.A.
 
@@ -139,4 +157,5 @@ Com base em informações públicas e em uma base sintética, o trabalho: (i) fi
 
 - CVM — Demonstrações Financeiras Padronizadas (DFP 2025), Frasle Mobility S.A., documento 155265 (`01_fontes/`; consultado em 23/10/2026).
 - Portal de Relações com Investidores: ri.fraslemobility.com.
-- CFC — Normas Brasileiras de Contabilidade Técnicas de Auditoria (NBC TA 200 a 600).
+- CFC — Normas Brasileiras de Contabilidade Técnicas de Auditoria (NBC TA 200 a 600): https://cfc.org.br/tecnica/normas-brasileiras-de-contabilidade/nbc-ta-de-auditoria-independente/ (consultada em 11/11/2026).
+- Lista completa, com endereço, data, página e exercício: `01_fontes/registro_fontes.csv`.
