@@ -232,8 +232,8 @@ Repositório (01_fontes … 09_conclusao_integrada.md); registro_fontes.csv.
 | Campo | Conteúdo |
 |---|---|
 | Código | [PT 240](#pt-240) |
-| Norma e itens | NBC TA 240 (R1 aplicável ao exercício; R2 de 25/09/2026 posterior ao exercício) — §§ 25–27 (discussão da equipe e riscos de fraude); §§ 31–33 (lançamentos manuais, estimativas) |
-| Versão da norma | R1 (exercício 2025); R2 — 25/09/2026 |
+| Norma e itens | NBC TA 240 (R1) — versão aplicável ao exercício de 2025 — §§ 25–27 (discussão da equipe e riscos de fraude); §§ 31–33 (lançamentos manuais, estimativas) |
+| Versão da norma | R1 (aplicada a 2025). A R2, DOU 25/09/2026, só vale para períodos iniciados em ou após 01/01/2027 |
 | Natureza | **Simulado para fins didáticos** |
 | Companhia / exercício | Frasle Mobility S.A. (antes Frasle S.A.; ticker FRAS3) — 31/12/2025 |
 
@@ -520,7 +520,7 @@ F01: ativo total R$ 7.222.660 mil; receita líquida R$ 5.490.878 mil; lucro ante
 #### 6. Resultados, exceções, conclusão e limitações
 - **Resultados:** Global R$ 72.227 mil; execução R$ 54.170 mil; irrelevantes R$ 3.611 mil.
 - **Exceções:** A global adotada (1% do ativo = R$ 72.227 mil) é 2,6x a de 0,5% da ROL (R$ 27.454 mil) e 4,5x a de 5% do lucro antes dos tributos (R$ 16.045 mil): é a mais alta da triangulação, logo a menos sensível a distorções — ponto para revisão do docente.
-- **Conclusão:** Materialidade fixada por julgamento acadêmico e sensível ao referencial; decisão final pendente de revisão.
+- **Conclusão:** Decisão (13/11/2026): mantido 1% do ativo total como materialidade global, com a limitação acima registrada. Materialidade fixada por julgamento acadêmico e sensível ao referencial; revisão pendente.
 - **Limitações:** Trabalho acadêmico baseado em informações públicas e em base sintética; sem acesso à companhia, sem contato com terceiros e sem opinião de auditoria.
 
 #### 7. Responsáveis
@@ -1049,8 +1049,8 @@ F01 p.66 (aprovação pelo Conselho em 11/03/2026); p.134 (relatório KPMG, Port
 | Campo | Conteúdo |
 |---|---|
 | Código | [PT 570](#pt-570) |
-| Norma e itens | NBC TA 570 (R1 de 25/09/2026, posterior ao exercício; R0 aplicável a 2025 — a confirmar) — §§ 10–16 (avaliação da administração); § 18 (incerteza relevante) |
-| Versão da norma | R1 — 25/09/2026 (confirmar aplicabilidade) |
+| Norma e itens | NBC TA 570 (versão anterior à R1) — aplicável ao exercício de 2025 — §§ 10–16 (avaliação da administração); § 18 (incerteza relevante) |
+| Versão da norma | Versão anterior à R1 (aplicada a 2025; número da resolução a conferir no CFC). A R1, DOU 25/09/2026, só vale para períodos iniciados em ou após 01/01/2027 |
 | Natureza | **Realizado com evidência pública** |
 | Companhia / exercício | Frasle Mobility S.A. (antes Frasle S.A.; ticker FRAS3) — 31/12/2025 |
 

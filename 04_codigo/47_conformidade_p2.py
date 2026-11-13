@@ -111,7 +111,7 @@ pt(cod="230", titulo="Documentação de auditoria", norma="NBC TA 230 (R1)", ver
    evid=["06_matrizes/indice_papeis_trabalho.csv","04_codigo/48_verificacao_p2.py","Legado: PT_230.csv"],
    result="Verificação automática registra OK/FALTA por item.", exc="Ver resultado de 48_verificacao_p2.py.", concl="Documentação rastreável; limitações declaradas.", apoio=["PT_230.csv"])
 
-pt(cod="240", titulo="Responsabilidades do auditor em relação a fraude", norma="NBC TA 240 (R1 aplicável ao exercício; R2 de 25/09/2026 posterior ao exercício)", versao="R1 (exercício 2025); R2 — 25/09/2026",
+pt(cod="240", titulo="Responsabilidades do auditor em relação a fraude", norma="NBC TA 240 (R1) — versão aplicável ao exercício de 2025", versao="R1 (aplicada a 2025). A R2, DOU 25/09/2026, só vale para períodos iniciados em ou após 01/01/2027",
    itens="§§ 25–27 (discussão da equipe e riscos de fraude); §§ 31–33 (lançamentos manuais, estimativas)", natureza=SIM,
    objetivo="Avaliar fatores de risco de fraude e simular testes de lançamentos atípicos sobre a base sintética do intangível.",
    conta="Intangível (R$ "+n(F['intang25'])+" mil) — maior conta do ativo não circulante com estimativas.",
@@ -180,7 +180,7 @@ pt(cod="320", titulo="Materialidade no planejamento e na execução", norma="NBC
    proc=["Global = 1,0% do ativo total = R$ 72.227 mil (escolha original do aluno).","Triangulação: 0,5% da ROL = R$ "+n(F['rol25']*0.005)+" mil; 5% do lucro antes dos tributos = R$ 16.045 mil.","Execução = 75% da global; limite de irrelevantes = 5% da global.","Conta-alvo: Intangível, por ser a maior conta do ativo não circulante."],
    evid=["05_resultados/calculo_materialidade.csv","05_resultados/comparacao_referenciais_materialidade.csv","05_resultados/planilhas_editaveis_p2.xlsx (fórmulas editáveis)","Legado: PT32_materialidade.csv"],
    result="Global R$ 72.227 mil; execução R$ 54.170 mil; irrelevantes R$ 3.611 mil.", exc="A global adotada (1% do ativo = R$ 72.227 mil) é 2,6x a de 0,5% da ROL (R$ 27.454 mil) e 4,5x a de 5% do lucro antes dos tributos (R$ 16.045 mil): é a mais alta da triangulação, logo a menos sensível a distorções — ponto para revisão do docente.",
-   concl="Materialidade fixada por julgamento acadêmico e sensível ao referencial; decisão final pendente de revisão.", apoio=["PT32_materialidade.csv"])
+   concl="Decisão (13/11/2026): mantido 1% do ativo total como materialidade global, com a limitação acima registrada. Materialidade fixada por julgamento acadêmico e sensível ao referencial; revisão pendente.", apoio=["PT32_materialidade.csv"])
 
 pt(cod="330", titulo="Respostas do auditor aos riscos avaliados", norma="NBC TA 330 (R1)", versao="R1 — DOU 05/09/2016",
    itens="§§ 5–6 (respostas gerais); §§ 6–21 (procedimentos adicionais)", natureza=SIM,
@@ -275,7 +275,7 @@ pt(cod="560", titulo="Eventos subsequentes", norma="NBC TA 560 (R1)", versao="R1
    proc=["Registrar período de eventos subsequentes: 01/01/2026 a 11/03/2026.","Não foram buscadas notícias após essa data nesta etapa (planejado)."],
    evid=["F01 p.66, p.134","Legado: PT09_eventos_subsequentes.csv"], result="Data-limite documentada.", exc="Eventos após a emissão não pesquisados.", concl="Corte documentado.", apoio=["PT09_eventos_subsequentes.csv"])
 
-pt(cod="570", titulo="Continuidade operacional", norma="NBC TA 570 (R1 de 25/09/2026, posterior ao exercício; R0 aplicável a 2025 — a confirmar)", versao="R1 — 25/09/2026 (confirmar aplicabilidade)",
+pt(cod="570", titulo="Continuidade operacional", norma="NBC TA 570 (versão anterior à R1) — aplicável ao exercício de 2025", versao="Versão anterior à R1 (aplicada a 2025; número da resolução a conferir no CFC). A R1, DOU 25/09/2026, só vale para períodos iniciados em ou após 01/01/2027",
    itens="§§ 10–16 (avaliação da administração); § 18 (incerteza relevante)", natureza=RLZ,
    objetivo="Avaliar indicadores de continuidade a partir da DFP.", conta="Passivos financeiros: R$ "+n(F['dv'])+" mil sujeitos a covenants.",
    afir="Apresentação; avaliação da base contábil.", fontes="F01 Nota 23 p.106-107: covenant dívida líquida/EBITDA ≤ 3,50x, atendido em 31/12/2025; relatório KPMG p.132 (sem incerteza relevante apontada).",

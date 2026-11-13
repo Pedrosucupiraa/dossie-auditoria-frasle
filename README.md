@@ -24,9 +24,8 @@ Uma referência normativa, o volume de registros ou a reconciliação aritmétic
 ## 1.1 Nome da companhia e prazo
 
 - **Mudança de nome:** a Nota 1 da DFP informa que a **Frasle Mobility S.A.** foi "denominada até 31 de dezembro de 2025 como Frasle S.A."; as ações seguem negociadas na B3 sob **FRAS3** (DFP, p.66). A data efetiva da mudança e a eventual alteração do código de negociação não foram confirmadas além da Nota 1.
-- **Prazo:** a entrega prevista nas instruções era 25/10/2026; esta versão foi elaborada em 13/11/2026, após o prazo, e a aceitação cabe ao professor.
 - **Revisão:** o campo de revisão de todos os PTs está "Pendente de revisão"; nenhuma assinatura é simulada.
-- **Versões das normas:** registradas em `matriz_cobertura_normas.csv` a partir da lista do CFC (consultada em 11/11/2026). NBC TA 240 (R2) e 570 (R1) são de 25/09/2026, posteriores ao exercício; qual versão se aplica a 2025 deve ser confirmado.
+- **Versões das normas:** registradas em `matriz_cobertura_normas.csv` a partir da lista do CFC (consultada em 11/11/2026). NBC TA 240 (R2) e 570 (R1) foram publicadas no DOU em 25/09/2026 e só se aplicam a períodos iniciados em ou após 01/01/2027 (notícia do CFC de 28/09/2026); para o exercício de 2025 vale a NBC TA 240 (R1) e a versão da NBC TA 570 anterior à R1. O número da resolução dessas versões anteriores não consta na lista do CFC consultada e deve ser conferido.
 
 ## 2. Estrutura do repositório
 
@@ -96,6 +95,8 @@ Os percentuais são premissas acadêmicas; a NBC TA 320 não fixa percentuais. R
 Derivados do ativo total: execução (75%) R\$ 54.169,95 mil; limite de distorções irrelevantes (5%) R\$ 3.611,33 mil; materialidade específica do intangível (1% do saldo) R\$ 18.745,50 mil.
 
 **Justificativa e limite da escolha:** o ativo total foi mantido porque o objeto do trabalho é uma conta patrimonial (intangível: 25,95% do ativo) e o lucro antes dos tributos caiu 40,9% no ano, com resultado financeiro de +R\$ 24.129 mil para −R\$ 403.209 mil. O ativo total também cresceu (+48,3%), de modo que a escolha **não** se apoia em estabilidade. É o referencial **mais permissivo** da comparação (a materialidade adotada equivale a 4,5 vezes a obtida com o lucro antes dos tributos).
+
+**Decisão (13/11/2026):** mantido 1% do ativo total como materialidade global, com a limitação acima registrada.
 
 ### Reconciliação do intangível — `PT05_conclusao_reconciliacao.csv`, `reconciliacao_intangivel_revisada.csv`
 
