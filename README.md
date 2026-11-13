@@ -24,7 +24,6 @@ Uma referência normativa, o volume de registros ou a reconciliação aritmétic
 ## 1.1 Nome da companhia e prazo
 
 - **Mudança de nome:** a Nota 1 da DFP informa que a **Frasle Mobility S.A.** foi "denominada até 31 de dezembro de 2025 como Frasle S.A."; as ações seguem negociadas na B3 sob **FRAS3** (DFP, p.66). A data efetiva da mudança e a eventual alteração do código de negociação não foram confirmadas além da Nota 1.
-- **Prazo:** a entrega prevista nas instruções era 25/10/2026; esta versão foi elaborada em 13/11/2026, após o prazo, e a aceitação cabe ao professor.
 - **Revisão:** o campo de revisão de todos os PTs está "Pendente de revisão"; nenhuma assinatura é simulada.
 - **Versões das normas:** registradas em `matriz_cobertura_normas.csv` a partir da lista do CFC (consultada em 11/11/2026). NBC TA 240 (R2) e 570 (R1) são de 25/09/2026, posteriores ao exercício; qual versão se aplica a 2025 deve ser confirmado.
 
